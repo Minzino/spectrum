@@ -25,11 +25,11 @@ jobs:
       - name: setup repo
         uses: actions/checkout@v3
 
-      - name: setup java 8
+      - name: setup java 11
         uses: actions/setup-java@v3
         with:
-          java-version: "8"
-          distribution: "adopt"
+          java-version: "11"
+          distribution: "corretto"
           cache: gradle
 
       - name: Use gradle cache
