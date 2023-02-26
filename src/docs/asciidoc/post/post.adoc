@@ -1,0 +1,9 @@
+=== 게시글(Post) 등록
+
+API : `POST /api/posts`
+
+==== Request
+include::{snippets}/post-create/http-request.adoc[]
+
+==== Response
+include::{snippets}/post-create/http-response.adoc[]

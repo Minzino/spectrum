@@ -1,0 +1,17 @@
+= 스펙트럼(Spectrum) 애플리케이션
+송민제, <gurumcider@gmail.com>
+v0.0.1, 23-02-05
+:author: 송민제
+:email: gurumcider@gmail.com
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:toc-title: 목차
+:sectlinks:
+:sectnums:
+
+== 게시글 API
+
+include::{docdir}/post/post.adoc[]
