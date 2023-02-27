@@ -22,12 +22,14 @@ repositories {
 
 ext {
 	set('snippetsDir', file('build/generated-snippets'))
+	set('testcontainersVersion', "1.17.6")
 }
 
 dependencies {
 	// web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	// dev
 	compileOnly 'org.projectlombok:lombok'
@@ -41,9 +43,19 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.rest-assured:rest-assured' // 통합테스트, rest-assured 사용하기 위해서
 
+	// TestContainers
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:mysql'
+
 	// api docs
 	testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
 	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom("org.testcontainers:testcontainers-bom:${property("testcontainersVersion")}")
+	}
 }
 
 tasks.named('test') {
@@ -71,7 +83,7 @@ asciidoctor.doFirst {
 	delete file("${project.rootDir}/src/main/resources/static/docs")
 }
 
-task copyDocument(type: Copy) {
+tasks.register('copyDocument', Copy) {
 	dependsOn asciidoctor
 
 	from "${project.buildDir}/docs/asciidoc"
