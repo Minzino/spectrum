@@ -13,6 +13,7 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	asciidoctorExt
 }
 
 repositories {
@@ -20,7 +21,7 @@ repositories {
 }
 
 ext {
-	set('snippetsDir', file("build/generated-snippets"))
+	set('snippetsDir', file('build/generated-snippets'))
 }
 
 dependencies {
@@ -42,6 +43,7 @@ dependencies {
 
 	// api docs
 	testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
+	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
 
 tasks.named('test') {
@@ -52,4 +54,30 @@ tasks.named('test') {
 tasks.named('asciidoctor') {
 	inputs.dir snippetsDir
 	dependsOn test
+
+	// config 추가
+	configurations 'asciidoctorExt'
+
+	// 변환할 adoc들을 명시한다.
+	sources {
+		include '**/index.adoc'
+	}
+
+	// include 연산을 사용할 때 base 디렉터리를 지정해줍니다.
+	baseDirFollowsSourceFile()
+}
+
+asciidoctor.doFirst {
+	delete file("${project.rootDir}/src/main/resources/static/docs")
+}
+
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor
+
+	from "${project.buildDir}/docs/asciidoc"
+	into "${project.rootDir}/src/main/resources/static/docs"
+}
+
+build {
+	dependsOn copyDocument
 }
