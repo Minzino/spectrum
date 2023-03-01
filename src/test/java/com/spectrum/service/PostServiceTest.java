@@ -3,6 +3,7 @@ package com.spectrum.service;
 import com.spectrum.controller.post.dto.PostCreateRequest;
 import com.spectrum.domain.post.Post;
 import com.spectrum.repository.PostRepository;
+import com.spectrum.service.dto.PostCreateResponse;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,12 +29,11 @@ class PostServiceTest {
         String title = "title4";
         String content = "content4";
         Long memberId = 1L;
+        PostCreateRequest postCreateRequest = new PostCreateRequest(title, content, memberId);
 
         // when
-        PostCreateRequest postCreateRequest = new PostCreateRequest(title, content, memberId);
-        postService.save(postCreateRequest.convertToPostCreateDto());
-
-        Post findPost = postRepository.findById(1L).orElse(null);
+        PostCreateResponse postCreateResponse = postService.save(postCreateRequest.convertToPostCreateDto());
+        Post findPost = postRepository.findById(postCreateResponse.getMemberId()).orElse(null);
 
         // then
         SoftAssertions.assertSoftly(softly -> {
