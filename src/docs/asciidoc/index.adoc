@@ -1,0 +1,15 @@
+= 스펙트럼(Spectrum) 애플리케이션
+v0.0.1, 23-02-26
+:author: 송민제
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+// 문서의 목차를 왼쪽에 부여한다.
+:toc: left
+:toclevels: 2
+:toc-title: 목차
+:sectlinks:
+:sectnums:
+
+== 게시글 API
+include::{docdir}/post/post.adoc[]
