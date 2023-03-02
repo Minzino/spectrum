@@ -1,10 +1,16 @@
 package com.spectrum.service;
 
-import com.spectrum.controller.post.dto.PostCreateRequest;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.spectrum.controller.post.dto.PostCreateResponse;
+import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
 import com.spectrum.repository.PostRepository;
-import com.spectrum.service.dto.PostCreateResponse;
+import com.spectrum.service.dto.PostCreateDto;
+import com.spectrum.service.dto.PostUpdateDto;
+import java.util.NoSuchElementException;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +28,65 @@ class PostServiceTest {
     @Autowired
     PostRepository postRepository;
 
-    @DisplayName("정상적인 게시글 생성 요청이 들어온다면 게시글을 생성 성공")
+    Post savePost;
+    Long memberId = 1L;
+
+    @BeforeEach
+    void init() {
+        savePost = postRepository.save(new Post("title", "content", 1L));
+    }
+
+    @DisplayName("정상적인 게시글 생성 요청이 들어온다면 게시글 생성 성공")
     @Test
     void create_post_success() {
         // given
-        String title = "title4";
-        String content = "content4";
-        Long memberId = 1L;
-        PostCreateRequest postCreateRequest = new PostCreateRequest(title, content, memberId);
+        String title = "title1";
+        String content = "content1";
+
+        PostCreateDto postCreateDto = new PostCreateDto(title, content, memberId);
 
         // when
-        PostCreateResponse postCreateResponse = postService.save(postCreateRequest.convertToPostCreateDto());
-        Post findPost = postRepository.findById(postCreateResponse.getMemberId()).orElse(null);
+        PostCreateResponse response = postService.save(postCreateDto);
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(findPost.getMemberId()).isEqualTo(memberId);
-            softly.assertThat(findPost.getContent()).isEqualTo(content);
-            softly.assertThat(findPost.getTitle()).isEqualTo(title);
+            softly.assertThat(response.getMemberId()).isEqualTo(memberId);
+            softly.assertThat(response.getContent()).isEqualTo(postCreateDto.getContent());
+            softly.assertThat(response.getTitle()).isEqualTo(postCreateDto.getTitle());
         });
+    }
+
+    @DisplayName("정상적인 게시글 수정 요청이 들어온다면 게시글 변경 성공")
+    @Test
+    void update_post_success() {
+        // given
+        String updateTitle = "updateTitle";
+        String updateContent = "updateContent";
+
+        PostUpdateDto postUpdateDto = new PostUpdateDto(updateContent, updateTitle);
+
+        // when
+        PostUpdateResponse response = postService.update(memberId, savePost.getId(), postUpdateDto);
+
+        // then
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(response.getMemberId()).isEqualTo(memberId);
+            softly.assertThat(response.getContent()).isEqualTo(postUpdateDto.getContent());
+            softly.assertThat(response.getTitle()).isEqualTo(postUpdateDto.getTitle());
+        });
+    }
+
+    @DisplayName("존재하지 않는 게시글을 수정하는 경우 예외 발생")
+    @Test
+    void update_post_failure() {
+        String updateTitle = "updateTitle";
+        String updateContent = "updateContent";
+        Long fakePostId = -1L;
+
+        PostUpdateDto postUpdateDto = new PostUpdateDto(updateContent, updateTitle);
+
+        assertThatThrownBy(
+            () -> postService.update(memberId, fakePostId, postUpdateDto))
+            .isInstanceOf(NoSuchElementException.class);
     }
 }
