@@ -7,3 +7,14 @@ include::{snippets}/post-create/http-request.adoc[]
 
 ==== Response
 include::{snippets}/post-create/http-response.adoc[]
+
+
+=== 게시글 수정
+
+API : `PUT /api/posts`
+
+==== Request
+include::{snippets}/post-update/http-request.adoc[]
+
+==== Response
+include::{snippets}/post-update/http-response.adoc[]

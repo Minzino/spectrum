@@ -9,14 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostUpdateRequest {
 
-    private Long memberId;
     private String title;
     private String content;
 
-    public PostUpdateRequest(String title, String content, Long memberId) {
+    public PostUpdateRequest(String title, String content) {
         this.title = title;
         this.content = content;
-        this.memberId = memberId;
     }
 
     public PostUpdateDto convertToPostUpdateDto() {
