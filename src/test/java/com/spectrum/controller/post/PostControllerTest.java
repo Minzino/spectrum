@@ -24,9 +24,11 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @Autowired
     PostRepository postRepository;
 
+    Post savePost;
+
     @BeforeEach
     void init() {
-        postRepository.save(new Post("title","content",1L));
+        savePost = postRepository.save(new Post("title", "content", 1L));
     }
 
     @Test
@@ -72,7 +74,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
             .body(request)
         .when()
-            .put("/api/posts/{postId}", 1L)
+            .put("/api/posts/{postId}", savePost.getId())
         .then()
             .statusCode(HttpStatus.OK.value());
     }
