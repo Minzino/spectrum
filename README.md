@@ -1,7 +1,9 @@
 <h1 align="middle">🌈 스펙트럼</h1>
 <br/>
 
-[ 📜 한눈에 보는 프로젝트 문서 Notion](https://meenzino.notion.site/Spectrum-7d3b3be6f54247809a3ba7a4325afe39)
+[📜 한눈에 보는 프로젝트 문서 Notion](https://meenzino.notion.site/Spectrum-7d3b3be6f54247809a3ba7a4325afe39)
+<br/>
+[📑 API 문서](https://minzino.github.io/spectrum/src/main/resources/static/docs/index.html)
 
 # Intro
 - Spectrum은 다양한 주제와 다양한 시각으로 다가가는 블로그 서비스입니다.
