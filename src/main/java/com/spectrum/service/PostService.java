@@ -21,9 +21,9 @@ public class PostService {
     }
 
     @Transactional
-    public PostCreateResponse save(PostCreateDto postCreateDto) {
+    public PostCreateResponse save(Long memberId, PostCreateDto postCreateDto) {
 
-        Post post = postCreateDto.convertToEntity();
+        Post post = postCreateDto.convertToEntity(memberId);
         return PostCreateResponse.ofEntity(postRepository.save(post));
     }
 

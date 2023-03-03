@@ -7,15 +7,13 @@ import lombok.Getter;
 public class PostCreateDto {
     private final String title;
     private final String content;
-    private final Long memberId;
 
-    public PostCreateDto(String title, String content, Long memberId) {
+    public PostCreateDto(String title, String content) {
         this.title = title;
         this.content = content;
-        this.memberId = memberId;
     }
 
-    public Post convertToEntity() {
+    public Post convertToEntity(Long memberId) {
         return new Post(title, content, memberId);
     }
 }

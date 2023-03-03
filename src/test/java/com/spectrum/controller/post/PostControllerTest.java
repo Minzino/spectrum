@@ -32,27 +32,26 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @Test
     @DisplayName("게시글 생성 요청이 정상적인 경우라면 게시글 생성 성공")
     void create_post_success() {
-        PostCreateRequest request = new PostCreateRequest("title", "content", 1L);
+        PostCreateRequest request = new PostCreateRequest("title", "content");
 
-        given(this.spec)
-            .filter(
-                document("post-create",
-                    requestFields(
-                        fieldWithPath("title").description("게시글 제목").type(JsonFieldType.STRING),
-                        fieldWithPath("content").description("게시글 내용").type(JsonFieldType.STRING),
-                        fieldWithPath("memberId").description("작성자 ID").type(JsonFieldType.NUMBER)
-                    )
+    given(this.spec)
+        .filter(
+            document("post-create",
+                requestFields(
+                    fieldWithPath("title").description("게시글 제목").type(JsonFieldType.STRING),
+                    fieldWithPath("content").description("게시글 내용").type(JsonFieldType.STRING)
                 )
             )
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
-            .body(request)
+        )
+        .accept(MediaType.APPLICATION_JSON_VALUE)
+        .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+        .body(request)
 
-        .when()
-            .post("/api/posts")
+    .when()
+        .post("/api/posts")
 
-        .then()
-            .statusCode(HttpStatus.CREATED.value());
+    .then()
+        .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test

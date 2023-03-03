@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
+import com.spectrum.exception.post.PostNotFoundException;
 import com.spectrum.repository.PostRepository;
 import com.spectrum.service.dto.PostCreateDto;
 import com.spectrum.service.dto.PostUpdateDto;
-import java.util.NoSuchElementException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,10 +43,10 @@ class PostServiceTest {
         String title = "title1";
         String content = "content1";
 
-        PostCreateDto postCreateDto = new PostCreateDto(title, content, memberId);
+        PostCreateDto postCreateDto = new PostCreateDto(title, content);
 
         // when
-        PostCreateResponse response = postService.save(postCreateDto);
+        PostCreateResponse response = postService.save(memberId, postCreateDto);
 
         // then
         SoftAssertions.assertSoftly(softly -> {
@@ -87,6 +87,6 @@ class PostServiceTest {
 
         assertThatThrownBy(
             () -> postService.update(memberId, fakePostId, postUpdateDto))
-            .isInstanceOf(NoSuchElementException.class);
+            .isInstanceOf(PostNotFoundException.class);
     }
 }

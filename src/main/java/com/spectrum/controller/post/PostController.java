@@ -4,6 +4,7 @@ import com.spectrum.controller.post.dto.PostCreateRequest;
 import com.spectrum.controller.post.dto.PostUpdateRequest;
 import com.spectrum.service.PostService;
 import java.net.URI;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,9 +24,11 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createPost(@RequestBody PostCreateRequest postCreateRequest) {
+    public ResponseEntity<Void> createPost(
+        Long memberId,
+        @Valid @RequestBody PostCreateRequest postCreateRequest) {
 
-        postService.save(postCreateRequest.convertToPostCreateDto());
+        postService.save(memberId, postCreateRequest.convertToPostCreateDto());
         return ResponseEntity.created(URI.create("/api/posts")).build();
     }
 
@@ -33,7 +36,7 @@ public class PostController {
     public ResponseEntity<Void> updatePost(
         Long memberId,
         @PathVariable("postId") Long postId,
-        @RequestBody PostUpdateRequest postUpdateRequest) {
+        @Valid @RequestBody PostUpdateRequest postUpdateRequest) {
 
         postService.update(memberId, postId, postUpdateRequest.convertToPostUpdateDto());
         return ResponseEntity.ok().build();
