@@ -35,11 +35,9 @@ public class Post extends BaseTimeEntity {
         this.memberId = memberId;
     }
 
-    public Post update(PostUpdateDto postUpdateDto, Long memberId) {
+    public void update(PostUpdateDto postUpdateDto, Long memberId) {
         this.title = postUpdateDto.getTitle();
         this.content = postUpdateDto.getContent();
         this.memberId = memberId;
-
-        return new Post(title, content, memberId);
     }
 }
