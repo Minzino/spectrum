@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostCreateResponse {
 
+    private Long postId;
     private Long memberId;
     private String title;
     private String content;
 
-    public PostCreateResponse(Long memberId, String title, String content) {
+    public PostCreateResponse(Long postId, Long memberId, String title, String content) {
+        this.postId = postId;
         this.memberId = memberId;
         this.title = title;
         this.content = content;
@@ -21,7 +23,8 @@ public class PostCreateResponse {
 
     public static PostCreateResponse ofEntity(Post savePost) {
         return new PostCreateResponse(
-            savePost.getMemberId()
+            savePost.getId()
+            , savePost.getMemberId()
             , savePost.getTitle()
             , savePost.getContent());
     }

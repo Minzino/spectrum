@@ -1,6 +1,7 @@
 package com.spectrum.controller.post;
 
 import com.spectrum.controller.post.dto.PostCreateRequest;
+import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostUpdateRequest;
 import com.spectrum.service.PostService;
 import java.net.URI;
@@ -28,8 +29,10 @@ public class PostController {
         Long memberId,
         @Valid @RequestBody PostCreateRequest postCreateRequest) {
 
-        postService.save(memberId, postCreateRequest.convertToPostCreateDto());
-        return ResponseEntity.created(URI.create("/api/posts")).build();
+        PostCreateResponse createdPost = postService.save(memberId,
+            postCreateRequest.convertToPostCreateDto());
+        URI location = URI.create("/api/posts" + createdPost.getPostId());
+        return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{postId}")
