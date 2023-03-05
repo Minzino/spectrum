@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SpectrumApplicationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<?> handlerClientException(SpectrumApplicationException exception) {
-        log.debug("[spectrum-exception] code = {}, message = {}, cause = {}",
+        log.error("[spectrum-exception] code = {}, message = {}, cause = {}",
             exception.getCode(), exception.getMessage(), exception.getCause());
 
         return ApiResponse.error(exception.getCode(), exception.getMessage());
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResponse<?> handleNotValidException(BindException exception) {
-        log.debug("[bind-exception] message = {}, cause ={}",
+        log.error("[bind-exception] message = {}, cause = {}",
             exception.getMessage(), exception.getCause());
 
         BindingResult bindingResult = exception.getBindingResult();
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResponse<?> handleNotValidException(Exception exception) {
-        log.debug("[not-handled-exception] message= {}, cause= {}, stackTrace= {}",
+        log.error("[not-handled-exception] message = {}, cause = {}, stackTrace = {}",
             exception.getMessage(), exception.getCause(), exception.getStackTrace());
 
         return ApiResponse.error(ErrorCodeAndMessage.SERVER_ERROR.getCode(),
