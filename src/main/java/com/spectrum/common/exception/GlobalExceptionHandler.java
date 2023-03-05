@@ -20,7 +20,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleException(Exception ex) {
         log.error("Unexpected error occurred.", ex);
-        return new ErrorResponse("SERVER_ERROR", "Unexpected error occurred.");
+        return new ErrorResponse(
+            ErrorCodeAndMessage.SERVER_ERROR.getCode()
+            , ErrorCodeAndMessage.SERVER_ERROR.getMessage());
     }
 
     @ExceptionHandler(SpectrumRuntimeException.class)
@@ -29,7 +31,9 @@ public class GlobalExceptionHandler {
         ErrorCodeAndMessage error = ex.getErrorCodeAndMessage();
 
         ErrorResponse errorResponse = new ErrorResponse(error.getCode(), error.getMessage());
-        return ResponseEntity.status(error.getHttpStatus()).body(errorResponse);
+        return ResponseEntity
+            .status(error.getHttpStatus())
+            .body(errorResponse);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -41,6 +45,9 @@ public class GlobalExceptionHandler {
                 fieldError.getDefaultMessage()))
             .collect(Collectors.toList());
 
-        return new ErrorResponse("INVALID_REQUEST", "Invalid request", errors);
+        return new ErrorResponse(
+            ErrorCodeAndMessage.INVALID_REQUEST.getCode()
+            , ErrorCodeAndMessage.INVALID_REQUEST.getMessage()
+            , errors);
     }
 }
