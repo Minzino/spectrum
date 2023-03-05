@@ -1,5 +1,6 @@
 package com.spectrum.common.exception;
 
+import com.spectrum.common.dto.ErrorResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,31 +31,31 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleException(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         log.error("Unexpected error occurred.", ex);
         HttpStatus httpStatus = exceptionHttpStatusMap.getOrDefault(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
-        return ResponseEntity.status(httpStatus)
-            .body(Map.of("code", "SERVER_ERROR", "message", "Unexpected error occurred."));
+
+        ErrorResponse errorResponse = new ErrorResponse("SERVER_ERROR", "Unexpected error occurred.");
+        return ResponseEntity.status(httpStatus).body(errorResponse);
     }
 
     @ExceptionHandler(SpectrumRuntimeException.class)
-    public ResponseEntity<Object> handleCustomException(SpectrumRuntimeException ex) {
+    public ResponseEntity<ErrorResponse> handleCustomException(SpectrumRuntimeException ex) {
         log.error("Error code: {}, message: {}", ex.getErrorCode(), ex.getErrorMessage());
         ErrorCodeAndMessage error = ex.getErrorCodeAndMessage();
 
-        return ResponseEntity.status(error.getHttpStatus())
-            .body(Map.of("code", error.getCode(), "message", error.getMessage()));
+        ErrorResponse errorResponse = new ErrorResponse(error.getCode(), error.getMessage());
+        return ResponseEntity.status(error.getHttpStatus()).body(errorResponse);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         List<String> errors = bindingResult.getFieldErrors().stream()
             .map(fieldError -> String.format("%s %s", fieldError.getField(), fieldError.getDefaultMessage()))
             .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(Map.of("code", "INVALID_REQUEST", "message", "Invalid request", "errors", errors));
+        ErrorResponse errorResponse = new ErrorResponse("INVALID_REQUEST", "Invalid request", errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
-
 }
