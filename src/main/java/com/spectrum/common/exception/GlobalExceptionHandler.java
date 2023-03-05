@@ -9,25 +9,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
-    private final ErrorMapping errorMapping;
-
-    public GlobalExceptionHandler(ErrorMapping errorMapping) {
-        this.errorMapping = errorMapping;
-    }
-
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleException(Exception ex) {
         log.error("Unexpected error occurred.", ex);
-        HttpStatus httpStatus = errorMapping.getHttpStatusForException(ex.getClass());
-
-        ErrorResponse errorResponse = new ErrorResponse("SERVER_ERROR", "Unexpected error occurred.");
-        return ResponseEntity.status(httpStatus).body(errorResponse);
+        return new ErrorResponse("SERVER_ERROR", "Unexpected error occurred.");
     }
 
     @ExceptionHandler(SpectrumRuntimeException.class)
@@ -40,13 +33,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         List<String> errors = bindingResult.getFieldErrors().stream()
-            .map(fieldError -> String.format("%s %s", fieldError.getField(), fieldError.getDefaultMessage()))
+            .map(fieldError -> String.format("%s %s", fieldError.getField(),
+                fieldError.getDefaultMessage()))
             .collect(Collectors.toList());
 
-        ErrorResponse errorResponse = new ErrorResponse("INVALID_REQUEST", "Invalid request", errors);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        return new ErrorResponse("INVALID_REQUEST", "Invalid request", errors);
     }
 }
