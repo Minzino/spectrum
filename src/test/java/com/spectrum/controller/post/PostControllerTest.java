@@ -10,7 +10,7 @@ import com.spectrum.controller.post.dto.PostUpdateRequest;
 import com.spectrum.documentationtest.InitIntegrationDocsTest;
 import com.spectrum.domain.post.Post;
 import com.spectrum.repository.PostRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
 
     Post savePost;
 
-    @BeforeEach
+    @BeforeAll
     void init() {
         savePost = postRepository.save(new Post("title", "content", 1L));
     }
@@ -74,7 +74,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
             .body(request)
         .when()
-            .put("/api/posts/{postId}", savePost.getId())
+            .put("/api/posts/{postId}", 1L)
         .then()
             .statusCode(HttpStatus.OK.value());
     }
