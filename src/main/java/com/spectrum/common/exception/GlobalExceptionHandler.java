@@ -1,9 +1,7 @@
 package com.spectrum.common.exception;
 
 import com.spectrum.common.dto.ErrorResponse;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,21 +17,16 @@ public class GlobalExceptionHandler {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private final Map<Class<? extends Exception>, HttpStatus> exceptionHttpStatusMap;
+    private final ErrorMapping errorMapping;
 
-    public GlobalExceptionHandler() {
-        exceptionHttpStatusMap = new HashMap<>();
-        exceptionHttpStatusMap.put(SpectrumRuntimeException.class, HttpStatus.BAD_REQUEST);
-        exceptionHttpStatusMap.put(NullPointerException.class, HttpStatus.INTERNAL_SERVER_ERROR);
-        exceptionHttpStatusMap.put(IllegalArgumentException.class, HttpStatus.BAD_REQUEST);
-        exceptionHttpStatusMap.put(IllegalStateException.class, HttpStatus.BAD_REQUEST);
-        exceptionHttpStatusMap.put(UnsupportedOperationException.class, HttpStatus.BAD_REQUEST);
+    public GlobalExceptionHandler(ErrorMapping errorMapping) {
+        this.errorMapping = errorMapping;
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         log.error("Unexpected error occurred.", ex);
-        HttpStatus httpStatus = exceptionHttpStatusMap.getOrDefault(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
+        HttpStatus httpStatus = errorMapping.getHttpStatusForException(ex.getClass());
 
         ErrorResponse errorResponse = new ErrorResponse("SERVER_ERROR", "Unexpected error occurred.");
         return ResponseEntity.status(httpStatus).body(errorResponse);
