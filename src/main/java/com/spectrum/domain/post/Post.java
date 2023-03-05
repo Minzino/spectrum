@@ -1,7 +1,6 @@
 package com.spectrum.domain.post;
 
 import com.spectrum.common.domain.BaseTimeEntity;
-import com.spectrum.service.dto.PostUpdateDto;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,9 +34,9 @@ public class Post extends BaseTimeEntity {
         this.memberId = memberId;
     }
 
-    public void update(PostUpdateDto postUpdateDto, Long memberId) {
-        this.title = postUpdateDto.getTitle();
-        this.content = postUpdateDto.getContent();
+    public void update(String title, String content, Long memberId) {
+        this.title = title;
+        this.content = content;
         this.memberId = memberId;
     }
 }

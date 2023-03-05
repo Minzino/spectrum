@@ -33,7 +33,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
             .orElseThrow(PostNotFoundException::new);
 
-        post.update(postUpdateDto, memberId);
+        post.update(postUpdateDto.getTitle(),postUpdateDto.getContent(), memberId);
         return PostUpdateResponse.ofEntity(post);
     }
 }
