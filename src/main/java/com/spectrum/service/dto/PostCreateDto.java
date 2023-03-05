@@ -1,24 +1,19 @@
 package com.spectrum.service.dto;
 
 import com.spectrum.domain.post.Post;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostCreateDto {
-    private String title;
-    private String content;
-    private Long memberId;
+    private final String title;
+    private final String content;
 
-    public PostCreateDto(String title, String content, Long memberId) {
+    public PostCreateDto(String title, String content) {
         this.title = title;
         this.content = content;
-        this.memberId = memberId;
     }
 
-    public Post convertToEntity() {
+    public Post convertToEntity(Long memberId) {
         return new Post(title, content, memberId);
     }
 }
