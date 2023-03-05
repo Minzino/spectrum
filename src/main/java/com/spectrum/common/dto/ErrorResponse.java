@@ -7,13 +7,14 @@ import lombok.Getter;
 @Getter
 public class ErrorResponse {
 
-    private String code;
-    private String message;
-    private List<String> errors = new ArrayList<>();
+    private final String code;
+    private final String message;
+    private final List<String> errors;
 
     public ErrorResponse(String code, String message) {
         this.code = code;
         this.message = message;
+        this.errors = new ArrayList<>();
     }
 
     public ErrorResponse(String code, String message, List<String> errors) {
