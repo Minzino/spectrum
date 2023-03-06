@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
@@ -17,17 +16,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleException(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         log.error("Unexpected error occurred.", ex);
-        return new ErrorResponse(
+
+        ErrorResponse errorResponse = new ErrorResponse(
             ErrorCodeAndMessage.SERVER_ERROR.getCode()
             , ErrorCodeAndMessage.SERVER_ERROR.getMessage());
+
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(errorResponse);
     }
 
     @ExceptionHandler(SpectrumRuntimeException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(SpectrumRuntimeException ex) {
-        log.error("Error code: {}, message: {}", ex.getErrorCode(), ex.getErrorMessage());
+        log.info("Error code: {}, message: {}", ex.getErrorCode(), ex.getErrorMessage());
         ErrorCodeAndMessage error = ex.getErrorCodeAndMessage();
 
         ErrorResponse errorResponse = new ErrorResponse(error.getCode(), error.getMessage());
@@ -37,17 +40,21 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+        MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         List<String> errors = bindingResult.getFieldErrors().stream()
             .map(fieldError -> String.format("%s %s", fieldError.getField(),
                 fieldError.getDefaultMessage()))
             .collect(Collectors.toList());
 
-        return new ErrorResponse(
+        ErrorResponse errorResponse = new ErrorResponse(
             ErrorCodeAndMessage.INVALID_REQUEST.getCode()
             , ErrorCodeAndMessage.INVALID_REQUEST.getMessage()
             , errors);
+
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(errorResponse);
     }
 }
