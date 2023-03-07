@@ -12,7 +12,7 @@ import com.spectrum.controller.post.dto.PostUpdateRequest;
 import com.spectrum.documentationtest.InitIntegrationDocsTest;
 import com.spectrum.domain.post.Post;
 import com.spectrum.repository.PostRepository;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
 
     Post savePost;
 
-    @BeforeAll
+    @BeforeEach
     void init() {
         savePost = postRepository.save(new Post("title", "content", 1L));
     }
@@ -62,7 +62,6 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @DisplayName("게시글 수정 요청이 정상적인 경우라면 게시글 변경 성공")
     void update_post_success() {
         PostUpdateRequest request = new PostUpdateRequest("title", "content");
-
         given(this.spec)
             .filter(
                 document("post-update",
