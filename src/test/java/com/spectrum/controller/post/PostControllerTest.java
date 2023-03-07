@@ -12,7 +12,7 @@ import com.spectrum.controller.post.dto.PostUpdateRequest;
 import com.spectrum.documentationtest.InitIntegrationDocsTest;
 import com.spectrum.domain.post.Post;
 import com.spectrum.repository.PostRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +26,13 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @Autowired
     PostRepository postRepository;
 
-    Post savePost;
+    Post savePost1;
+    Post savePost2;
 
-    @BeforeEach
+    @BeforeAll
     void init() {
-        savePost = postRepository.save(new Post("title", "content", 1L));
+        savePost1 = postRepository.save(new Post("title1", "content1", 1L));
+        savePost2 = postRepository.save(new Post("title2", "content2", 1L));
     }
 
     @Test
@@ -51,10 +53,10 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
             .body(request)
 
-            .when()
+        .when()
             .post("/api/posts")
 
-            .then()
+        .then()
             .statusCode(HttpStatus.CREATED.value());
     }
 
@@ -75,7 +77,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
             .body(request)
         .when()
-            .put("/api/posts/{postId}", 1L)
+            .put("/api/posts/{postId}", savePost2.getId())
         .then()
             .statusCode(HttpStatus.OK.value());
     }
@@ -83,7 +85,6 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @Test
     @DisplayName("게시글 삭제 요청이 정상적인 경우라면 게시글 삭제 성공")
     void delete_post_success() {
-        Long deleteId = savePost.getId();
 
         given(this.spec)
             .filter(
@@ -94,8 +95,44 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
         .when()
-            .delete("/api/posts/{postId}", deleteId)
+            .delete("/api/posts/{postId}", savePost1.getId())
         .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
+
+    @Test
+    @DisplayName("게시글 단건 조회 요청이 정상적인 경우 게시글 단건 조회 성공")
+    void find_post_success() {
+        given(this.spec)
+            .filter(
+                document("post-find",
+                    pathParameters(parameterWithName("postId").description("조회할 게시글의 ID"))
+                )
+            )
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+        .when()
+            .get("/api/posts/{postId}", savePost2.getId())
+        .then()
+            .statusCode(HttpStatus.OK.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    @Test
+    @DisplayName("게시글 전체 조회 요청이 정상적인 경우 게시글 전체 조회 성공")
+    void findAll_post_success() {
+        given(this.spec)
+            .filter(
+                document("post-findAll"
+                )
+            )
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+        .when()
+            .get("/api/posts")
+        .then()
+            .statusCode(HttpStatus.OK.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
+    }
+
 }
