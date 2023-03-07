@@ -1,10 +1,10 @@
 package com.spectrum.documentationtest;
 
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spectrum.IntegerationRestAssuredAndRestDocsTest;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.ObjectMapperConfig;
@@ -12,12 +12,19 @@ import io.restassured.config.RestAssuredConfig;
 import io.restassured.internal.mapping.Jackson2Mapper;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
 
-@IntegerationRestAssuredAndRestDocsTest
+@SpringBootTest(webEnvironment = RANDOM_PORT)
+@TestInstance(Lifecycle.PER_CLASS)
+@ExtendWith(RestDocumentationExtension.class)
 @ActiveProfiles("test")
 public class InitIntegrationDocsTest {
 
