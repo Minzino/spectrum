@@ -36,4 +36,13 @@ public class PostService {
         post.update(postUpdateDto.getTitle(),postUpdateDto.getContent(), memberId);
         return PostUpdateResponse.ofEntity(post);
     }
+
+    @Transactional
+    public void delete(Long memberId, Long postId) {
+
+        Post post = postRepository.findById(postId)
+            .orElseThrow(PostNotFoundException::new);
+
+        postRepository.delete(post);
+    }
 }

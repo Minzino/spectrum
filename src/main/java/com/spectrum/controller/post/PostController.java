@@ -7,6 +7,7 @@ import com.spectrum.service.PostService;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,5 +44,14 @@ public class PostController {
 
         postService.update(memberId, postId, postUpdateRequest.convertToPostUpdateDto());
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePost(
+        Long memberId,
+        @PathVariable("postId") Long postId) {
+
+        postService.delete(memberId, postId);
+        return ResponseEntity.noContent().build();
     }
 }
