@@ -1,5 +1,6 @@
 package com.spectrum.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.spectrum.controller.post.dto.PostCreateResponse;
@@ -9,6 +10,7 @@ import com.spectrum.exception.post.PostNotFoundException;
 import com.spectrum.repository.PostRepository;
 import com.spectrum.service.dto.PostCreateDto;
 import com.spectrum.service.dto.PostUpdateDto;
+import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -79,14 +81,42 @@ class PostServiceTest {
     @DisplayName("존재하지 않는 게시글을 수정하는 경우 예외 발생")
     @Test
     void update_post_failure() {
+        // given
         String updateTitle = "updateTitle";
         String updateContent = "updateContent";
         Long fakePostId = -1L;
 
         PostUpdateDto postUpdateDto = new PostUpdateDto(updateContent, updateTitle);
 
+        // when & then
         assertThatThrownBy(
             () -> postService.update(memberId, fakePostId, postUpdateDto))
+            .isInstanceOf(PostNotFoundException.class);
+    }
+
+    @DisplayName("정상적인 게시글 삭제 요청의 경우 삭제 성공")
+    @Test
+    void delete_post_success() {
+        // given
+        Long savePostId = savePost.getId();
+
+        // when
+        postService.delete(memberId, savePostId);
+        Optional<Post> deletePost = postRepository.findById(savePostId);
+
+        // then
+        assertThat(deletePost).isNotPresent();
+    }
+
+    @DisplayName("존재하지 않는 게시글 삭제 요청의 경우 예외 발생")
+    @Test
+    void delete_post_failure() {
+        // given
+        Long fakeId = -1L;
+
+        // when & then
+        assertThatThrownBy(
+            () -> postService.delete(memberId, fakeId))
             .isInstanceOf(PostNotFoundException.class);
     }
 }
