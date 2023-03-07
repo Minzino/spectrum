@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.spectrum.controller.post.dto.PostCreateResponse;
+import com.spectrum.controller.post.dto.PostDetailResponse;
+import com.spectrum.controller.post.dto.PostListResponse;
 import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
 import com.spectrum.exception.post.PostNotFoundException;
@@ -30,12 +32,15 @@ class PostServiceTest {
     @Autowired
     PostRepository postRepository;
 
-    Post savePost;
-    Long memberId = 1L;
+    Post savePost1;
+    Post savePost2;
+    private static final Long MEMBER_ID = 1L;
+    private static final Long FAKE_ID = -1L;
 
     @BeforeEach
     void init() {
-        savePost = postRepository.save(new Post("title", "content", 1L));
+        savePost1 = postRepository.save(new Post("title", "content", MEMBER_ID));
+        savePost2 = postRepository.save(new Post("title", "content", MEMBER_ID));
     }
 
     @DisplayName("정상적인 게시글 생성 요청이 들어온다면 게시글 생성 성공")
@@ -48,11 +53,11 @@ class PostServiceTest {
         PostCreateDto postCreateDto = new PostCreateDto(title, content);
 
         // when
-        PostCreateResponse response = postService.save(memberId, postCreateDto);
+        PostCreateResponse response = postService.save(MEMBER_ID, postCreateDto);
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.getMemberId()).isEqualTo(memberId);
+            softly.assertThat(response.getMemberId()).isEqualTo(MEMBER_ID);
             softly.assertThat(response.getContent()).isEqualTo(postCreateDto.getContent());
             softly.assertThat(response.getTitle()).isEqualTo(postCreateDto.getTitle());
         });
@@ -68,11 +73,11 @@ class PostServiceTest {
         PostUpdateDto postUpdateDto = new PostUpdateDto(updateContent, updateTitle);
 
         // when
-        PostUpdateResponse response = postService.update(memberId, savePost.getId(), postUpdateDto);
+        PostUpdateResponse response = postService.update(MEMBER_ID, savePost1.getId(), postUpdateDto);
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.getMemberId()).isEqualTo(memberId);
+            softly.assertThat(response.getMemberId()).isEqualTo(MEMBER_ID);
             softly.assertThat(response.getContent()).isEqualTo(postUpdateDto.getContent());
             softly.assertThat(response.getTitle()).isEqualTo(postUpdateDto.getTitle());
         });
@@ -84,13 +89,12 @@ class PostServiceTest {
         // given
         String updateTitle = "updateTitle";
         String updateContent = "updateContent";
-        Long fakePostId = -1L;
 
         PostUpdateDto postUpdateDto = new PostUpdateDto(updateContent, updateTitle);
 
         // when & then
         assertThatThrownBy(
-            () -> postService.update(memberId, fakePostId, postUpdateDto))
+            () -> postService.update(MEMBER_ID, FAKE_ID, postUpdateDto))
             .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -98,10 +102,10 @@ class PostServiceTest {
     @Test
     void delete_post_success() {
         // given
-        Long savePostId = savePost.getId();
+        Long savePostId = savePost1.getId();
 
         // when
-        postService.delete(memberId, savePostId);
+        postService.delete(MEMBER_ID, savePostId);
         Optional<Post> deletePost = postRepository.findById(savePostId);
 
         // then
@@ -111,12 +115,41 @@ class PostServiceTest {
     @DisplayName("존재하지 않는 게시글 삭제 요청의 경우 예외 발생")
     @Test
     void delete_post_failure() {
-        // given
-        Long fakeId = -1L;
-
         // when & then
         assertThatThrownBy(
-            () -> postService.delete(memberId, fakeId))
+            () -> postService.delete(MEMBER_ID, FAKE_ID))
             .isInstanceOf(PostNotFoundException.class);
+    }
+
+    @DisplayName("정상적인 게시글 단건 조회 요청시 조회 성공")
+    @Test
+    void get_post_by_id_success() {
+        // given
+        Long postId = savePost1.getId();
+
+        // when
+        PostDetailResponse post = postService.findPostById(postId);
+
+        // then
+        assertThat(post.getPostId()).isEqualTo(postId);
+        assertThat(post.getTitle()).isEqualTo(savePost1.getTitle());
+        assertThat(post.getContent()).isEqualTo(savePost1.getContent());
+    }
+
+    @DisplayName("존재하지 않는 게시글 조회 요청의 경우 예외 발생")
+    @Test
+    void get_post_by_id_failure() {
+        // when & then
+        assertThatThrownBy(() -> postService.findPostById(FAKE_ID))
+            .isInstanceOf(PostNotFoundException.class);
+    }
+
+    @DisplayName("정상적인 게시글 전체 조회시 전체 조회 성공")
+    @Test
+    void get_all_post_success() {
+        // given & when
+        PostListResponse postList = postService.findAll();
+        // then
+        assertThat(postList.getPosts().size()).isEqualTo(postRepository.count());
     }
 }
