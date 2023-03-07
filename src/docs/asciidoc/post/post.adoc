@@ -18,3 +18,12 @@ include::{snippets}/post-update/http-request.adoc[]
 
 ==== Response
 include::{snippets}/post-update/http-response.adoc[]
+
+
+=== 게시글 삭제
+
+==== Request
+include::{snippets}/post-delete/http-request.adoc[]
+
+==== Response
+include::{snippets}/post-delete/http-response.adoc[]

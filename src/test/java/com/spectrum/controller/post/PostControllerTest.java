@@ -3,6 +3,8 @@ package com.spectrum.controller.post;
 import static io.restassured.RestAssured.given;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.spectrum.controller.post.dto.PostCreateRequest;
@@ -36,29 +38,29 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     void create_post_success() {
         PostCreateRequest request = new PostCreateRequest("title", "content");
 
-    given(this.spec)
-        .filter(
-            document("post-create",
-                requestFields(
-                    fieldWithPath("title").description("게시글 제목").type(JsonFieldType.STRING),
-                    fieldWithPath("content").description("게시글 내용").type(JsonFieldType.STRING)
+        given(this.spec)
+            .filter(
+                document("post-create",
+                    requestFields(
+                        fieldWithPath("title").description("게시글 제목").type(JsonFieldType.STRING),
+                        fieldWithPath("content").description("게시글 내용").type(JsonFieldType.STRING)
+                    )
                 )
             )
-        )
-        .accept(MediaType.APPLICATION_JSON_VALUE)
-        .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
-        .body(request)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+            .body(request)
 
-    .when()
-        .post("/api/posts")
+            .when()
+            .post("/api/posts")
 
-    .then()
-        .statusCode(HttpStatus.CREATED.value());
+            .then()
+            .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
     @DisplayName("게시글 수정 요청이 정상적인 경우라면 게시글 변경 성공")
-        void update_post_success() {
+    void update_post_success() {
         PostUpdateRequest request = new PostUpdateRequest("title", "content");
 
         given(this.spec)
@@ -77,5 +79,24 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .put("/api/posts/{postId}", 1L)
         .then()
             .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 요청이 정상적인 경우라면 게시글 삭제 성공")
+    void delete_post_success() {
+        Long deleteId = savePost.getId();
+
+        given(this.spec)
+            .filter(
+                document("post-delete",
+                    pathParameters(parameterWithName("postId").description("삭제할 게시글의 ID"))
+                )
+            )
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+        .when()
+            .delete("/api/posts/{postId}", deleteId)
+        .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }
