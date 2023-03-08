@@ -448,10 +448,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">목차</div>
 <ul class="sectlevel1">
-<li><a href="#_게시글_api">1. 게시글 API</a>
+<li><a href="#_게시글_crud_api">1. 게시글 CRUD API</a>
 <ul class="sectlevel2">
 <li><a href="#_게시글_등록">1.1. 게시글 등록</a></li>
 <li><a href="#_게시글_수정">1.2. 게시글 수정</a></li>
+<li><a href="#_게시글_삭제">1.3. 게시글 삭제</a></li>
+<li><a href="#_게시글_단건_조회">1.4. 게시글 단건 조회</a></li>
+<li><a href="#_게시글_전체_조회">1.5. 게시글 전체 조회</a></li>
 </ul>
 </li>
 </ul>
@@ -459,7 +462,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_게시글_api"><a class="link" href="#_게시글_api">1. 게시글 API</a></h2>
+<h2 id="_게시글_crud_api"><a class="link" href="#_게시글_crud_api">1. 게시글 CRUD API</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_게시글_등록"><a class="link" href="#_게시글_등록">1.1. 게시글 등록</a></h3>
@@ -473,7 +476,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/posts HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:56634
+Host: localhost:64772
 Content-Length: 48
 
 {
@@ -488,8 +491,8 @@ Content-Length: 48
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
-Location: /api/posts
-Date: Fri, 03 Mar 2023 04:41:22 GMT
+Location: /api/posts3
+Date: Tue, 07 Mar 2023 09:51:17 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
@@ -499,16 +502,16 @@ Connection: keep-alive</code></pre>
 <div class="sect2">
 <h3 id="_게시글_수정"><a class="link" href="#_게시글_수정">1.2. 게시글 수정</a></h3>
 <div class="paragraph">
-<p>API : <code>PUT /api/posts</code></p>
+<p>API : <code>PUT /api/posts/{postId}</code></p>
 </div>
 <div class="sect3">
 <h4 id="_request_2"><a class="link" href="#_request_2">1.2.1. Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /api/posts/3 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /api/posts/2 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:56634
+Host: localhost:64772
 Content-Length: 48
 
 {
@@ -523,9 +526,117 @@ Content-Length: 48
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Date: Fri, 03 Mar 2023 04:41:22 GMT
+Date: Tue, 07 Mar 2023 09:51:17 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_게시글_삭제"><a class="link" href="#_게시글_삭제">1.3. 게시글 삭제</a></h3>
+<div class="paragraph">
+<p>API : <code>DELETE /api/posts/{postId}</code></p>
+</div>
+<div class="sect3">
+<h4 id="_request_3"><a class="link" href="#_request_3">1.3.1. Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /api/posts/1 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: localhost:64772</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_3"><a class="link" href="#_response_3">1.3.2. Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Date: Tue, 07 Mar 2023 09:51:17 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_게시글_단건_조회"><a class="link" href="#_게시글_단건_조회">1.4. 게시글 단건 조회</a></h3>
+<div class="paragraph">
+<p>API: <code>GET /api/posts/{postId}</code></p>
+</div>
+<div class="sect3">
+<h4 id="_request_4"><a class="link" href="#_request_4">1.4.1. Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/posts/2 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: localhost:64772</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_4"><a class="link" href="#_response_4">1.4.2. Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 07 Mar 2023 09:51:17 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+Content-Length: 66
+
+{
+  "postId" : 2,
+  "title" : "title2",
+  "content" : "content2"
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_게시글_전체_조회"><a class="link" href="#_게시글_전체_조회">1.5. 게시글 전체 조회</a></h3>
+<div class="paragraph">
+<p>API: <code>GET /api/posts</code></p>
+</div>
+<div class="sect3">
+<h4 id="_request_5"><a class="link" href="#_request_5">1.5.1. Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/posts HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: localhost:64772</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_5"><a class="link" href="#_response_5">1.5.2. Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 07 Mar 2023 09:51:17 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+Content-Length: 170
+
+{
+  "posts" : [ {
+    "postId" : 1,
+    "title" : "title1",
+    "content" : "content1"
+  }, {
+    "postId" : 2,
+    "title" : "title2",
+    "content" : "content2"
+  } ]
+}</code></pre>
 </div>
 </div>
 </div>
@@ -536,7 +647,7 @@ Connection: keep-alive</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-03-01 14:56:52 +0900
+Last updated 2023-03-07 17:40:49 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

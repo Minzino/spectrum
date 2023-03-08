@@ -11,5 +11,5 @@ v0.0.1, 23-02-26
 :sectlinks:
 :sectnums:
 
-== 게시글 API
+== 게시글 CRUD API
 include::{docdir}/post/post.adoc[]

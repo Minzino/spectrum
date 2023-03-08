@@ -11,10 +11,41 @@ include::{snippets}/post-create/http-response.adoc[]
 
 === 게시글 수정
 
-API : `PUT /api/posts`
+API : `PUT /api/posts/{postId}`
 
 ==== Request
 include::{snippets}/post-update/http-request.adoc[]
 
 ==== Response
 include::{snippets}/post-update/http-response.adoc[]
+
+
+=== 게시글 삭제
+
+API : `DELETE /api/posts/{postId}`
+
+==== Request
+include::{snippets}/post-delete/http-request.adoc[]
+
+==== Response
+include::{snippets}/post-delete/http-response.adoc[]
+
+=== 게시글 단건 조회
+
+API: `GET /api/posts/{postId}`
+
+==== Request
+include::{snippets}/post-find/http-request.adoc[]
+
+==== Response
+include::{snippets}/post-find/http-response.adoc[]
+
+=== 게시글 전체 조회
+
+API: `GET /api/posts`
+
+==== Request
+include::{snippets}/post-findAll/http-request.adoc[]
+
+==== Response
+include::{snippets}/post-findAll/http-response.adoc[]
