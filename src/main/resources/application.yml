@@ -1,7 +1,7 @@
 spring:
   profiles:
     active:
-      - local
+      - dev
 
     group:
       local: "db-local"
@@ -9,3 +9,4 @@ spring:
       test: "db-test"
     include:
       - db
+      - auth
