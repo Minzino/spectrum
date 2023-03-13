@@ -56,7 +56,7 @@ public class PostService {
         List<Post> postList = postRepository.findAll();
         List<PostDto> postsDto = postList.stream()
             .map(post -> new PostDto(post.getId(), post.getTitle(), post.getContent()))
-            .collect(Collectors.toList());
+            .collect(Collectors.toUnmodifiableList());
         return new PostListResponse(postsDto);
     }
 
