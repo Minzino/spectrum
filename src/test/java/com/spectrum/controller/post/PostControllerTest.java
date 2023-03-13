@@ -11,7 +11,7 @@ import com.spectrum.controller.post.dto.PostCreateRequest;
 import com.spectrum.controller.post.dto.PostUpdateRequest;
 import com.spectrum.documentationtest.InitIntegrationDocsTest;
 import com.spectrum.domain.post.Post;
-import com.spectrum.repository.PostRepository;
+import com.spectrum.repository.post.PostRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

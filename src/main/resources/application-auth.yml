@@ -1,0 +1,45 @@
+spring:
+  config:
+    activate:
+      on-profile: "auth"
+
+oauth2:
+  user:
+    github:
+      client-id: ${{ secrets.GH_CLIENT_ID }}
+      client-secret: ${{ secrets.GH_CLIENT_SECRET }}
+      redirect-uri: ${{ secrets.GH_REDIRECT_URI }}
+    google:
+      client-id: ${{ secrets.GOOGLE_CLIENT_ID }}
+      client-secret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      redirect-uri: ${{ secrets.GOOGLE_REDIRECT_URI }}
+    naver:
+      client-id: ${{ secrets.NAVER_CLIENT_ID }}
+      client-secret: ${{ secrets.NAVER_CLIENT_SECRET }}
+      redirect-uri: ${{ secrets.NAVER_REDIRECT_URI }}
+    kakao:
+      client-id: ${{ secrets.KAKAO_CLIENT_ID }}
+      client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
+      redirect-uri: ${{ secrets.KAKAO_REDIRECT_URI }}
+
+  provider:
+    github:
+      token-uri: ${{ secrets.GH_TOKEN_URI }}
+      user-info-uri: ${{ secrets.GH_USER_INFO_URI }}
+    google:
+      token-uri: ${{ secrets.GOOGLE_TOKEN_URI }}
+      user-info-uri: ${{ secrets.GOOGLE_USER_INFO_URI }}
+    naver:
+      token-uri: ${{ secrets.NAVER_TOKEN_URI }}
+      user-info-uri: ${{ secrets.NAVER_USER_INFO_URI }}
+    kakao:
+      token-uri: ${{ secrets.KAKAO_TOKEN_URI }}
+      user-info-uri: ${{ secrets.KAKAO_USER_INFO_URI }}
+
+jwt:
+  token:
+    secret-key: ${{ secrets.JWT_SECRET_KEY }}
+  access-token:
+    expire-length: 600000
+  refresh-token:
+    expire-length: 1800000

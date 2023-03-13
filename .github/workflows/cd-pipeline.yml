@@ -1,4 +1,4 @@
-name: BE - CD(Init repo -> CI Gradle Cache -> Test) # 현재 CD의 배포하는 곳은 존재하지 않기 때문에 test만 실행합니다.
+name: BE - CD(Init repo -> CD Gradle Cache -> Test)
 
 on:
   push:
@@ -32,6 +32,13 @@ jobs:
           distribution: "corretto"
           cache: gradle
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password-stdin: true
+
       - name: Use gradle cache
         uses: actions/cache@v3
         with:
@@ -44,5 +51,46 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Test And Analyze
-        run: ./gradlew test
+      - name: Build with Gradle
+        run: ./gradlew jib
+
+      # 도커 이미지 배포 및 실행(Oracle Cloud에 ubuntu20.04로 배포)
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_IP }}
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: GITHUB_SHA
+          script: |
+            sudo docker ps -a -q --filter "name=${{ secrets.IMAGE_NAME }}" | grep -q . && sudo docker stop ${{ secrets.IMAGE_NAME }} && sudo docker rm ${{ secrets.IMAGE_NAME }} | true
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.IMAGE_NAME }}:latest
+            sudo docker run -d -p 8080:8080 --name ${{ secrets.IMAGE_NAME }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.IMAGE_NAME }}:latest
+            sudo docker rmi -f $(docker images -f "dangling=true" -q) || true
+            sudo docker logs ${{ secrets.IMAGE_NAME }} >> ${{ secrets.IMAGE_NAME }}_log.txt
+
+      - name: Notify Slack on Success
+        if: ${{ success() }}
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          title: ${{ github.repository }}
+          author_name: Github Action Test
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          color: good
+          github_token: ${{ secrets.GH_TOKEN }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Slack on Failure
+        if: ${{ failure() }}
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          title: ${{ github.repository }}
+          author_name: Github Action Test
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          color: fail
+          github_token: ${{ secrets.GH_TOKEN }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

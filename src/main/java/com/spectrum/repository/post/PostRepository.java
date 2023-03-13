@@ -1,4 +1,4 @@
-package com.spectrum.repository;
+package com.spectrum.repository.post;
 
 import com.spectrum.domain.post.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
