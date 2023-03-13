@@ -1,7 +1,7 @@
 package com.spectrum.config;
 
 import com.spectrum.auth.provider.InMemoryProviderRepository;
-import com.spectrum.auth.provider.OAuthProperties;
+import com.spectrum.auth.OAuthProperties;
 import com.spectrum.auth.provider.OAuthProvider;
 import com.spectrum.auth.provider.OAuthProviderConverter;
 import java.util.Map;

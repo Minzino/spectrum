@@ -38,3 +38,7 @@ oauth2:
 jwt:
   token:
     secret-key: secretzinoking
+  access-token:
+    expire-length: 600000
+  refresh-token:
+    expire-length: 1800000

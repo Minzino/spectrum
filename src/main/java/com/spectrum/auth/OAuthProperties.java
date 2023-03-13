@@ -1,4 +1,4 @@
-package com.spectrum.auth.provider;
+package com.spectrum.auth;
 
 import com.spectrum.auth.dto.ProviderPropertiesDto;
 import com.spectrum.auth.dto.UserPropertiesDto;
