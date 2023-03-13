@@ -16,7 +16,7 @@ public class OAuthController {
 
     private final OAuthService oAuthService;
 
-    @GetMapping("/login/oauth/{provider}")
+    @GetMapping("/login/{provider}/callback")
     public ResponseEntity<LoginResponse> login(@PathVariable String provider, @RequestParam String code){
         LoginResponse loginResponse = oAuthService.login(provider, code);
         return ResponseEntity.ok().body(loginResponse);
