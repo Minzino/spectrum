@@ -22,6 +22,9 @@ jobs:
     name: Test SpringBoot
     runs-on: ubuntu-20.04
 
+    env:
+      JWT_OAUTH_PROPERTY: ${{ secrets.JWT_OAUTH_PROPERTY }}
+
     steps:
       - name: setup repo
         uses: actions/checkout@v3
