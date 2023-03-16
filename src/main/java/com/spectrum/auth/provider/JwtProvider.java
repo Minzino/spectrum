@@ -7,9 +7,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.Random;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -29,11 +27,17 @@ public class JwtProvider {
         return createToken(payload, accessTokenValidityInMilliseconds);
     }
 
-    public String createRefreshToken() {
-        byte[] array = new byte[7];
-        new Random().nextBytes(array);
-        String generatedString = new String(array, StandardCharsets.UTF_8);
-        return createToken(generatedString, refreshTokenValidityInMilliseconds);
+    public String createRefreshToken(String payload) {
+        Claims claims = Jwts.claims().setSubject(payload);
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + refreshTokenValidityInMilliseconds);
+
+        return Jwts.builder()
+            .setClaims(claims)
+            .setIssuedAt(now)
+            .setExpiration(validity)
+            .signWith(secretKey)
+            .compact();
     }
 
     public String createToken(String payload, long expireLength) {

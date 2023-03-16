@@ -16,33 +16,31 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class OAuthService {
 
+    private final static String TOKEN_TYPE = "Bearer";
     private final InMemoryProviderRepository inMemoryProviderRepository;
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
 
+    @Transactional
     public LoginResponse login(String providerName, String code) {
         // 프론트에서 넘어온 provider 이름을 통해 InMemoryProviderRepository에서 OAuthProvider 가져오기
         OAuthProvider provider = inMemoryProviderRepository.findByProviderName(providerName);
-
-        // TODO access token 가져오기
         OAuthTokenResponse tokenResponse = getToken(code, provider);
-
-        // TODO 유저 정보 가져오기
         UserProfile userProfile = getUserProfile(providerName, tokenResponse, provider);
-
-        // TODO 유저 DB에 저장
         User user = saveOrUpdate(userProfile);
 
         String accessToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
-        String refreshToken = jwtProvider.createRefreshToken();
+        String refreshToken = jwtProvider.createRefreshToken(String.valueOf(user.getId()));
 
         return LoginResponse.builder()
             .id(user.getId())
@@ -50,7 +48,7 @@ public class OAuthService {
             .email(user.getEmail())
             .imageUrl(user.getImageUrl())
             .authority(user.getAuthority())
-            .tokenType("Bearer")
+            .tokenType(TOKEN_TYPE)
             .accessToken(accessToken)
             .refreshToken(refreshToken)
             .build();
