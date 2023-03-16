@@ -3,65 +3,69 @@ package com.spectrum.auth;
 import com.spectrum.auth.dto.UserProfile;
 import java.util.Arrays;
 import java.util.Map;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor
 public enum OAuthAttributes {
-    KAKAO("kakao") {
+    KAKAO(Provider.KAKAO) {
         @Override
         public UserProfile of(Map<String, Object> attributes) {
-            Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-            Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+            Provider provider = getProvider();
+            Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get(provider.getAccountKey());
+            Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get(provider.getProfileKey());
             return UserProfile.builder()
-                .oauthId(String.valueOf(attributes.get("id")))
-                .email((String) kakaoAccount.get("email"))
-                .name((String) profile.get("nickname"))
-                .imageUrl((String) profile.get("profile_image_url"))
+                .oauthId(String.valueOf(attributes.get(provider.getIdKey())))
+                .email((String) kakaoAccount.get(provider.getEmailKey()))
+                .name((String) profile.get(provider.getNameKey()))
+                .imageUrl((String) profile.get(provider.getImageUrlKey()))
                 .build();
         }
     },
-    GITHUB("github") {
+    GITHUB(Provider.GITHUB) {
         @Override
         public UserProfile of(Map<String, Object> attributes) {
+            Provider provider = getProvider();
             return UserProfile.builder()
-                .oauthId(String.valueOf(attributes.get("id")))
-                .email((String) attributes.get("email"))
-                .name((String) attributes.get("name"))
-                .imageUrl((String) attributes.get("avatar_url"))
+                .oauthId(String.valueOf(attributes.get(provider.getIdKey())))
+                .email((String) attributes.get(provider.getEmailKey()))
+                .name((String) attributes.get(provider.getNameKey()))
+                .imageUrl((String) attributes.get(provider.getImageUrlKey()))
                 .build();
         }
     },
-    NAVER("naver") {
+    NAVER(Provider.NAVER) {
         @Override
         public UserProfile of(Map<String, Object> attributes) {
-            Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+            Provider provider = getProvider();
+            Map<String, Object> response = (Map<String, Object>) attributes.get(provider.getAccountKey());
             return UserProfile.builder()
-                .oauthId((String) response.get("id"))
-                .email((String) response.get("email"))
-                .name((String) response.get("name"))
-                .imageUrl((String) response.get("profile_image"))
+                .oauthId((String) response.get(provider.getIdKey()))
+                .email((String) response.get(provider.getEmailKey()))
+                .name((String) response.get(provider.getNameKey()))
+                .imageUrl((String) response.get(provider.getImageUrlKey()))
                 .build();
         }
     },
-    GOOGLE("google") {
+    GOOGLE(Provider.GOOGLE) {
         @Override
         public UserProfile of(Map<String, Object> attributes) {
+            Provider provider = getProvider();
             return UserProfile.builder()
-                .oauthId(String.valueOf(attributes.get("sub")))
-                .email((String) attributes.get("email"))
-                .name((String) attributes.get("name"))
-                .imageUrl((String) attributes.get("picture"))
+                .oauthId(String.valueOf(attributes.get(provider.getIdKey())))
+                .email((String) attributes.get(provider.getEmailKey()))
+                .name((String) attributes.get(provider.getNameKey()))
+                .imageUrl((String) attributes.get(provider.getImageUrlKey()))
                 .build();
         }
     };
 
-    private final String providerName;
-
-    OAuthAttributes(String name) {
-        this.providerName = name;
-    }
+    private final Provider provider;
 
     public static UserProfile extract(String providerName, Map<String, Object> attributes) {
         return Arrays.stream(values())
-            .filter(provider -> providerName.equals(provider.providerName))
+            .filter(provider -> provider.getProvider().getName().equals(providerName))
             .findFirst()
             .orElseThrow(IllegalArgumentException::new)
             .of(attributes);
