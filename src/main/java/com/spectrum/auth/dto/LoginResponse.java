@@ -6,16 +6,25 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LoginResponse {
+    @NotNull
     private Long id;
+    @NotNull
     private String name;
+    @NotNull
     private String email;
     private String imageUrl;
+    @NotNull
     private Authority authority;
+    @NotNull
     private String tokenType;
+    @NotNull
     private String accessToken;
+    @NotNull
     private String refreshToken;
 
     @Builder
@@ -31,4 +40,3 @@ public class LoginResponse {
         this.refreshToken = refreshToken;
     }
 }
-
