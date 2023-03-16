@@ -34,7 +34,7 @@ jobs:
           cache: gradle
 
       - name: Add oauth2 to auth.yml
-        run: echo "${{ secrets.JWT_SECRET_KEY }}" >> ./src/main/resources/application-auth.yml
+        run: echo "${{ secrets.JWT_OAUTH_PROPERTY }}" >> ./src/main/resources/application-auth.yml
 
       - name: Use gradle cache
         uses: actions/cache@v3
