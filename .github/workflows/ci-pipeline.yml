@@ -33,6 +33,9 @@ jobs:
           distribution: "corretto"
           cache: gradle
 
+      - name: Add oauth2 to auth.yml
+        run: echo "${{ secrets.JWT_SECRET_KEY }}" >> ./src/main/resources/application-auth.yml
+
       - name: Use gradle cache
         uses: actions/cache@v3
         with:
@@ -48,8 +51,6 @@ jobs:
 
       - name: Test And Analyze
         run: ./gradlew test
-        env:
-          JWT_OAUTH_PROPERTY : ${{ secrets.JWT_OAUTH_PROPERTY }}
 
       - name: Notify Slack on Success
         if: ${{ success() }}
