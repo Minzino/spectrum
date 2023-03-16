@@ -71,7 +71,7 @@ dependencyManagement {
 //jib 설정
 jib {
 	from {
-		image = "amazoncorretto:11-alpine-jdk"
+		image = "openjdk:11.0.11-jre-slim"
 	}
 	to {
 		image = "meenzino/spectrum"
