@@ -22,12 +22,16 @@ jobs:
     name: Test SpringBoot
     runs-on: ubuntu-20.04
 
-    env:
-      JWT_OAUTH_PROPERTY: ${{ secrets.JWT_OAUTH_PROPERTY }}
-
     steps:
       - name: setup repo
         uses: actions/checkout@v3
+
+      - name: Insert source information
+        run: |
+          sed -i "s|\${JWT_OAUTH_PROPERTY}|$JWT_OAUTH_PROPERTY|g" ./src/main/resources/application-auth.yml
+
+        env:
+          DATASOURCE_URL: ${{ secrets.JWT_OAUTH_PROPERTY }}
 
       - name: setup java 11
         uses: actions/setup-java@v3
