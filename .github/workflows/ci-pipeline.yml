@@ -33,6 +33,9 @@ jobs:
           distribution: "corretto"
           cache: gradle
 
+      - name: Add oauth2 to auth.yml
+        run: echo "${{ secrets.JWT_OAUTH_PROPERTY }}" >> ./src/main/resources/application-auth.yml
+
       - name: Use gradle cache
         uses: actions/cache@v3
         with:
@@ -42,24 +45,35 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Test And Analyze
         run: ./gradlew test
 
-      # 빌드 성공시 슬랙채널로 알람
-      - uses: 8398a7/action-slack@v3
+      - name: Notify Slack on Success
+        if: ${{ success() }}
+        uses: 8398a7/action-slack@v3
         with:
-          status: custom
-          fields: workflow,job,commit,repo,ref,author,took
-          custom_payload: |
-            {
-              attachments: [{
-                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-                text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
-              }]
-            }
+          status: success
+          title: ${{ github.repository }}
+          author_name: Github Action Test
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          color: good
+          github_token: ${{ secrets.GH_TOKEN }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: always() # Pick up events even if the job fails or is canceled.ways() # Pick up events even if the job fails or is canceled.
+
+      - name: Notify Slack on Failure
+        if: ${{ failure() }}
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          title: ${{ github.repository }}
+          author_name: Github Action Test
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          color: fail
+          github_token: ${{ secrets.GH_TOKEN }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

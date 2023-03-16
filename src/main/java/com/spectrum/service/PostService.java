@@ -6,7 +6,7 @@ import com.spectrum.controller.post.dto.PostListResponse;
 import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
 import com.spectrum.exception.post.PostNotFoundException;
-import com.spectrum.repository.PostRepository;
+import com.spectrum.repository.post.PostRepository;
 import com.spectrum.service.dto.PostCreateDto;
 import com.spectrum.service.dto.PostDto;
 import com.spectrum.service.dto.PostUpdateDto;
@@ -56,7 +56,7 @@ public class PostService {
         List<Post> postList = postRepository.findAll();
         List<PostDto> postsDto = postList.stream()
             .map(post -> new PostDto(post.getId(), post.getTitle(), post.getContent()))
-            .collect(Collectors.toList());
+            .collect(Collectors.toUnmodifiableList());
         return new PostListResponse(postsDto);
     }
 

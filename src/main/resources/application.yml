@@ -9,3 +9,4 @@ spring:
       test: "db-test"
     include:
       - db
+      - auth
