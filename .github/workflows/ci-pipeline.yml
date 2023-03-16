@@ -33,13 +33,6 @@ jobs:
           distribution: "corretto"
           cache: gradle
 
-      - name: Insert source information
-        run: |
-          sed -i "s|\${JWT_OAUTH_PROPERTY}|$JWT_OAUTH_PROPERTY|g" ./src/main/resources/application-auth.yml
-
-        env:
-          JWT_OAUTH_PROPERTY: ${{ secrets.JWT_OAUTH_PROPERTY }}
-
       - name: Use gradle cache
         uses: actions/cache@v3
         with:
@@ -49,11 +42,14 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Test And Analyze
         run: ./gradlew test
+        env:
+          JWT_OAUTH_PROPERTY : ${{ secrets.JWT_OAUTH_PROPERTY }}
 
       - name: Notify Slack on Success
         if: ${{ success() }}

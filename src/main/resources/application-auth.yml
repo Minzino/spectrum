@@ -3,4 +3,4 @@ spring:
     activate:
       on-profile: "auth"
 
-${JWT_OAUTH_PROPERTY}
+jwt-oauth-property: ${JWT_OAUTH_PROPERTY}
