@@ -5,48 +5,65 @@ import com.spectrum.controller.post.dto.PostDetailResponse;
 import com.spectrum.controller.post.dto.PostListResponse;
 import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
+import com.spectrum.domain.user.User;
+import com.spectrum.exception.post.NotAuthorException;
+import com.spectrum.exception.user.UserNotFoundException;
 import com.spectrum.exception.post.PostNotFoundException;
 import com.spectrum.repository.post.PostRepository;
+import com.spectrum.repository.user.UserRepository;
 import com.spectrum.service.dto.PostCreateDto;
 import com.spectrum.service.dto.PostDto;
 import com.spectrum.service.dto.PostUpdateDto;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
-
-    public PostService(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
+    private final UserRepository userRepository;
 
     @Transactional
-    public PostCreateResponse save(Long memberId, PostCreateDto postCreateDto) {
+    public PostCreateResponse save(Long userId, PostCreateDto postCreateDto) {
 
-        Post post = postCreateDto.convertToEntity(memberId);
+        User user = userRepository.findById(userId)
+            .orElseThrow(UserNotFoundException::new);
+        Post post = postCreateDto.convertToEntity(user.getId());
         return PostCreateResponse.ofEntity(postRepository.save(post));
     }
 
     @Transactional
-    public PostUpdateResponse update(Long memberId, Long postId, PostUpdateDto postUpdateDto) {
+    public PostUpdateResponse update(Long userId, Long postId, PostUpdateDto postUpdateDto) {
 
+        User user = userRepository.findById(userId)
+            .orElseThrow(UserNotFoundException::new);
         Post post = postRepository.findById(postId)
             .orElseThrow(PostNotFoundException::new);
 
-        post.update(postUpdateDto.getTitle(), postUpdateDto.getContent(), memberId);
+        if (!post.getUserId().equals(user.getId())) {
+            throw new NotAuthorException();
+        }
+
+        post.update(postUpdateDto.getTitle(), postUpdateDto.getContent(), user.getId());
         return PostUpdateResponse.ofEntity(post);
     }
 
     @Transactional
-    public void delete(Long memberId, Long postId) {
+    public void delete(Long userId, Long postId) {
 
+        User user = userRepository.findById(userId)
+            .orElseThrow(UserNotFoundException::new);
         Post post = postRepository.findById(postId)
             .orElseThrow(PostNotFoundException::new);
+
+        if (!post.getUserId().equals(user.getId())) {
+            throw new NotAuthorException();
+        }
 
         postRepository.delete(post);
     }
