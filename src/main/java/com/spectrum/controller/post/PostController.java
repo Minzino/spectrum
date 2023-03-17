@@ -1,5 +1,6 @@
 package com.spectrum.controller.post;
 
+import com.spectrum.common.resolver.CurrentUser;
 import com.spectrum.controller.post.dto.PostCreateRequest;
 import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
@@ -30,10 +31,10 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Void> createPost(
-        Long memberId,
+        @CurrentUser Long userId,
         @Valid @RequestBody PostCreateRequest postCreateRequest) {
 
-        PostCreateResponse createdPost = postService.save(memberId,
+        PostCreateResponse createdPost = postService.save(userId,
             postCreateRequest.convertToPostCreateDto());
         URI location = URI.create("/api/posts" + createdPost.getPostId());
         return ResponseEntity.created(location).build();
@@ -41,20 +42,20 @@ public class PostController {
 
     @PutMapping("/{postId}")
     public ResponseEntity<Void> updatePost(
-        Long memberId,
+        @CurrentUser Long userId,
         @PathVariable("postId") Long postId,
         @Valid @RequestBody PostUpdateRequest postUpdateRequest) {
 
-        postService.update(memberId, postId, postUpdateRequest.convertToPostUpdateDto());
+        postService.update(userId, postId, postUpdateRequest.convertToPostUpdateDto());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(
-        Long memberId,
+        @CurrentUser Long userId,
         @PathVariable("postId") Long postId) {
 
-        postService.delete(memberId, postId);
+        postService.delete(userId, postId);
         return ResponseEntity.noContent().build();
     }
 
