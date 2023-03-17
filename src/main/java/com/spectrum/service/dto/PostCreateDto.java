@@ -13,7 +13,7 @@ public class PostCreateDto {
         this.content = content;
     }
 
-    public Post convertToEntity(Long memberId) {
-        return new Post(title, content, memberId);
+    public Post convertToEntity(Long userId) {
+        return new Post(title, content, userId);
     }
 }

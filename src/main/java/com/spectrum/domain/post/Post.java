@@ -34,19 +34,19 @@ public class Post extends BaseTimeEntity {
     @Lob
     @Column(nullable = false)
     private String content;
-    private Long memberId;
+    private Long userId;
 
     private LocalDateTime deletedAt;
 
-    public Post(String title, String content, Long memberId) {
+    public Post(String title, String content, Long userId) {
         this.title = title;
         this.content = content;
-        this.memberId = memberId;
+        this.userId = userId;
     }
 
-    public void update(String title, String content, Long memberId) {
+    public void update(String title, String content, Long userId) {
         this.title = title;
         this.content = content;
-        this.memberId = memberId;
+        this.userId = userId;
     }
 }
