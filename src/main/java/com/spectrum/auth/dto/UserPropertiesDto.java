@@ -1,14 +1,17 @@
 package com.spectrum.auth.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class UserPropertiesDto {
 
-    private String clientId;
-    private String clientSecret;
-    private String RedirectUri;
+    private final String clientId;
+    private final String clientSecret;
+    private final String redirectUri;
 
+    public UserPropertiesDto(String clientId, String clientSecret, String redirectUri) {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.redirectUri = redirectUri;
+    }
 }

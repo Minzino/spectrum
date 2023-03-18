@@ -1,12 +1,15 @@
 package com.spectrum.auth.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class ProviderPropertiesDto {
 
-    private String tokenUri;
-    private String userInfoUri;
+    private final String tokenUri;
+    private final String userInfoUri;
+
+    public ProviderPropertiesDto(String tokenUri, String userInfoUri) {
+        this.tokenUri = tokenUri;
+        this.userInfoUri = userInfoUri;
+    }
 }
