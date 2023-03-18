@@ -1,5 +1,6 @@
 package com.spectrum.auth.provider;
 
+import com.spectrum.auth.JwtProperties;
 import com.spectrum.exception.auth.InvalidTokenException;
 import com.spectrum.exception.auth.TokenExpiredException;
 import io.jsonwebtoken.Claims;
@@ -7,24 +8,21 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 import javax.crypto.SecretKey;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtProvider {
-
-    @Value("${jwt.access-token.expire-length}")
-    private long accessTokenValidityInMilliseconds;
-    @Value("${jwt.refresh-token.expire-length}")
-    private long refreshTokenValidityInMilliseconds;
     private final SecretKey secretKey;
+    private final long accessTokenValidityInMilliseconds;
+    private final long refreshTokenValidityInMilliseconds;
 
-    public JwtProvider(@Value("${jwt.token.secret-key}") String secretKey) {
-        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    public JwtProvider(JwtProperties jwtProperties) {
+        this.secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
+        this.accessTokenValidityInMilliseconds = jwtProperties.getAccessTokenExpireLength();
+        this.refreshTokenValidityInMilliseconds = jwtProperties.getRefreshTokenExpireLength();
     }
 
     public String createAccessToken(String payload) {
@@ -70,6 +68,7 @@ public class JwtProvider {
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token);
+
             return !claims.getBody().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
             throw new TokenExpiredException();
