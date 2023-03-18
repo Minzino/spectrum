@@ -37,7 +37,6 @@ public class JwtProvider {
 
     public String createToken(String payload, long expireLength) {
         Claims claims = Jwts.claims().setSubject(payload);
-        claims.put("id", payload);
         Date now = new Date();
         Date validity = new Date(now.getTime() + expireLength);
 
