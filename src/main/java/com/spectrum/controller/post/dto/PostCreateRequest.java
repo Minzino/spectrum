@@ -1,6 +1,6 @@
 package com.spectrum.controller.post.dto;
 
-import com.spectrum.service.dto.PostCreateDto;
+import com.spectrum.service.post.dto.PostCreateDto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import lombok.AccessLevel;

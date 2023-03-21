@@ -6,7 +6,7 @@ import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
 import com.spectrum.controller.post.dto.PostListResponse;
 import com.spectrum.controller.post.dto.PostUpdateRequest;
-import com.spectrum.service.PostService;
+import com.spectrum.service.post.PostService;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +36,7 @@ public class PostController {
 
         PostCreateResponse createdPost = postService.save(userId,
             postCreateRequest.convertToPostCreateDto());
-        URI location = URI.create("/api/posts" + createdPost.getPostId());
+        URI location = URI.create("/api/posts/" + createdPost.getPostId());
         return ResponseEntity.created(location).build();
     }
 

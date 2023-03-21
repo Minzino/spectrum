@@ -1,6 +1,6 @@
 package com.spectrum.controller.post.dto;
 
-import com.spectrum.service.dto.PostUpdateDto;
+import com.spectrum.service.post.dto.PostUpdateDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

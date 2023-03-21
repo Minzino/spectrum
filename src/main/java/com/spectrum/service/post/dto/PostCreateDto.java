@@ -1,4 +1,4 @@
-package com.spectrum.service.dto;
+package com.spectrum.service.post.dto;
 
 import com.spectrum.domain.post.Post;
 import lombok.Getter;

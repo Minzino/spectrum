@@ -1,4 +1,4 @@
-package com.spectrum.service;
+package com.spectrum.service.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -15,8 +15,8 @@ import com.spectrum.exception.post.PostNotFoundException;
 import com.spectrum.exception.user.UserNotFoundException;
 import com.spectrum.repository.post.PostRepository;
 import com.spectrum.repository.user.UserRepository;
-import com.spectrum.service.dto.PostCreateDto;
-import com.spectrum.service.dto.PostUpdateDto;
+import com.spectrum.service.post.dto.PostCreateDto;
+import com.spectrum.service.post.dto.PostUpdateDto;
 import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;

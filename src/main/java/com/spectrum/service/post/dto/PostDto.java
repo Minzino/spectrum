@@ -1,4 +1,4 @@
-package com.spectrum.service.dto;
+package com.spectrum.service.post.dto;
 
 import lombok.AccessLevel;
 import lombok.Getter;
