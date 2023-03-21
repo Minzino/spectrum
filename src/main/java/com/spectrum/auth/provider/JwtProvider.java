@@ -19,7 +19,7 @@ public class JwtProvider {
     private final long accessTokenValidityInMilliseconds;
     private final long refreshTokenValidityInMilliseconds;
 
-    public JwtProvider(JwtProperties jwtProperties) {
+    private JwtProvider(JwtProperties jwtProperties) {
         this.secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
         this.accessTokenValidityInMilliseconds = jwtProperties.getAccessTokenExpireLength();
         this.refreshTokenValidityInMilliseconds = jwtProperties.getRefreshTokenExpireLength();
