@@ -39,6 +39,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     Post savePost1;
     Post savePost2;
     User user;
+    String validToken;
 
     @BeforeEach
     void init() {
@@ -47,14 +48,13 @@ public class PostControllerTest extends InitIntegrationDocsTest {
         user = userRepository.save(
             new User(1L, "123456789", "username", "email", "imageUrl", Authority.GUEST)
         );
+        validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
     }
 
     @Test
     @DisplayName("게시글 생성 요청이 정상적인 경우라면 게시글 생성 성공")
     void create_post_success() {
         PostCreateRequest request = new PostCreateRequest("title", "content");
-
-        String validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
 
         given(this.spec)
             .filter(
@@ -81,8 +81,6 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     void update_post_success() {
         PostUpdateRequest request = new PostUpdateRequest("title", "content");
 
-        String validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
-
         given(this.spec)
             .filter(
                 document("post-update",
@@ -105,7 +103,6 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @Test
     @DisplayName("게시글 삭제 요청이 정상적인 경우라면 게시글 삭제 성공")
     void delete_post_success() {
-        String validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
 
         given(this.spec)
             .filter(
