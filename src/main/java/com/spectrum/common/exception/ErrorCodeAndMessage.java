@@ -12,10 +12,6 @@ public enum ErrorCodeAndMessage {
     INVALID_USER("U401 - Invalid User", "유효하지 않은 사용자입니다.", HttpStatus.UNAUTHORIZED),
     USER_NOT_FOUND("U404 - User Not Found", "유저를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     NOT_AUTHOR("A403 - Not Author", "작성자가 아닙니다.", HttpStatus.FORBIDDEN),
-    TOKEN_EXPIRED("T401 - Token Expired", "토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED),
-    INVALID_TOKEN("T400 - Invalid Token", "유효하지 않은 토큰입니다.", HttpStatus.BAD_REQUEST),
-    HTTP_SERVLET_REQUEST_NULL("H400 - HttpServletRequest Null", "HttpServletRequest가 null입니다.",
-        HttpStatus.BAD_REQUEST),
     COMMENT_NOT_FOUND_EXCEPTION("C404 - Comment Not Found", "댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     NOT_PARENT_EXCEPTION("P400 - This Comment is Not Parent", "해당 댓글에는 대댓글을 작성할 수 없습니다.",
         HttpStatus.BAD_REQUEST);

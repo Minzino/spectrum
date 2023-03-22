@@ -1,9 +1,6 @@
 package com.spectrum.common.resolver;
 
 import com.spectrum.auth.provider.JwtProvider;
-import com.spectrum.exception.auth.InvalidTokenException;
-import com.spectrum.exception.resolver.HttpServletRequestNullException;
-import com.spectrum.exception.user.UserInvalidException;
 import java.util.Objects;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
@@ -37,11 +34,11 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
         HttpServletRequest request = Optional.ofNullable(
                 webRequest.getNativeRequest(HttpServletRequest.class))
-            .orElseThrow(HttpServletRequestNullException::new);
+            .orElseThrow(NullPointerException::new);
 
         String token = parseAuthorizationHeader(request);
         if (!jwtProvider.validateToken(token)) {
-            throw new InvalidTokenException();
+            throw new IllegalArgumentException();
         }
 
         String payload = jwtProvider.getPayload(token);
@@ -49,7 +46,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         try {
             userId = Long.parseLong(payload);
         } catch (NumberFormatException e) {
-            throw new InvalidTokenException();
+            throw new IllegalArgumentException();
         }
         return userId;
     }
@@ -58,7 +55,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
 
         if (Objects.isNull(authorizationHeader) || !authorizationHeader.startsWith(TOKEN_TYPE)) {
-            throw new UserInvalidException();
+            throw new IllegalArgumentException();
         }
 
         return authorizationHeader.substring(TOKEN_TYPE.length());
