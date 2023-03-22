@@ -16,6 +16,7 @@ import com.spectrum.domain.user.Authority;
 import com.spectrum.domain.user.User;
 import com.spectrum.repository.post.PostRepository;
 import com.spectrum.repository.user.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,12 +44,18 @@ public class PostControllerTest extends InitIntegrationDocsTest {
 
     @BeforeEach
     void init() {
-        savePost1 = postRepository.save(new Post("title1", "content1", 1L));
-        savePost2 = postRepository.save(new Post("title2", "content2", 1L));
         user = userRepository.save(
             new User(1L, "123456789", "username", "email", "imageUrl", Authority.GUEST)
         );
+        savePost1 = postRepository.save(new Post("title1", "content1", user.getId()));
+        savePost2 = postRepository.save(new Post("title2", "content2", user.getId()));
         validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
+    }
+
+    @AfterEach
+    void tearDown() {
+        postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -79,7 +86,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @Test
     @DisplayName("게시글 수정 요청이 정상적인 경우라면 게시글 변경 성공")
     void update_post_success() {
-        PostUpdateRequest request = new PostUpdateRequest("title", "content");
+        PostUpdateRequest request = new PostUpdateRequest("update title", "update content");
 
         given(this.spec)
             .filter(
@@ -95,7 +102,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .header("Authorization", "Bearer " + validToken)
             .body(request)
         .when()
-            .put("/api/posts/{postId}", savePost2.getId())
+            .put("/api/posts/{postId}", savePost1.getId())
         .then()
             .statusCode(HttpStatus.OK.value());
     }
@@ -131,7 +138,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
         .when()
-            .get("/api/posts/{postId}", savePost2.getId())
+            .get("/api/posts/{postId}", savePost1.getId())
         .then()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE);
