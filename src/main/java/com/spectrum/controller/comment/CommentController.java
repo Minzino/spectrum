@@ -6,8 +6,9 @@ import com.spectrum.controller.comment.dto.CommentCreateResponse;
 import com.spectrum.controller.comment.dto.CommentListResponse;
 import com.spectrum.controller.comment.dto.CommentUpdateRequest;
 import com.spectrum.controller.comment.dto.RepliesCreateRequest;
-import com.spectrum.controller.comment.dto.RepliesCreateResponse;
+import com.spectrum.controller.comment.dto.RepliesListResponse;
 import com.spectrum.service.comment.CommentService;
+import com.spectrum.controller.comment.dto.RepliesCreateResponse;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -89,5 +90,13 @@ public class CommentController {
 
         CommentListResponse commentListResponse = commentService.findAll(postId);
         return ResponseEntity.ok().body(commentListResponse);
+    }
+
+    @GetMapping("/comments/{commentId}/replies")
+    public ResponseEntity<RepliesListResponse> getAllReplies(
+        @PathVariable("commentId") Long parentId) {
+
+        RepliesListResponse repliesListResponse = commentService.findAllByParentId(parentId);
+        return ResponseEntity.ok().body(repliesListResponse);
     }
 }

@@ -1,6 +1,7 @@
 package com.spectrum.domain.comment;
 
 import com.spectrum.common.domain.BaseTimeEntity;
+import com.spectrum.exception.comment.NotParentException;
 import com.spectrum.exception.post.NotAuthorException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,6 +41,13 @@ public class Comment extends BaseTimeEntity {
         this.content = content;
     }
 
+    public Comment(Long userId, Long postId, Long parentId, String content) {
+        this.postId = postId;
+        this.parentId = parentId;
+        this.userId = userId;
+        this.content = content;
+    }
+
     public void update(String content) {
         this.content = content;
     }
@@ -47,6 +55,12 @@ public class Comment extends BaseTimeEntity {
     public void authorCheck(Long authorId) {
         if (!this.userId.equals(authorId)) {
             throw new NotAuthorException();
+        }
+    }
+
+    public void parentCheck() {
+        if(this.parentId != null){
+            throw new NotParentException();
         }
     }
 }

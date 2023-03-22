@@ -4,7 +4,7 @@ import com.spectrum.auth.aop.UserValidation;
 import com.spectrum.controller.comment.dto.CommentCreateResponse;
 import com.spectrum.controller.comment.dto.CommentListResponse;
 import com.spectrum.controller.comment.dto.CommentUpdateResponse;
-import com.spectrum.controller.comment.dto.RepliesCreateResponse;
+import com.spectrum.controller.comment.dto.RepliesListResponse;
 import com.spectrum.domain.comment.Comment;
 import com.spectrum.domain.post.Post;
 import com.spectrum.exception.comment.CommentNotFoundException;
@@ -14,7 +14,9 @@ import com.spectrum.repository.post.PostRepository;
 import com.spectrum.service.comment.dto.CommentCreateDto;
 import com.spectrum.service.comment.dto.CommentDto;
 import com.spectrum.service.comment.dto.CommentUpdateDto;
+import com.spectrum.controller.comment.dto.RepliesCreateResponse;
 import com.spectrum.service.comment.dto.RepliesCreateDto;
+import com.spectrum.service.comment.dto.RepliesDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -90,5 +92,14 @@ public class CommentService {
         );
 
         return RepliesCreateResponse.ofEntity(commentRepository.save(reply));
+    }
+
+    public RepliesListResponse findAllByParentId(Long parentId) {
+        List<Comment> repliesList = commentRepository.findAllByParentId(parentId);
+        List<RepliesDto> repliesListDto = repliesList.stream()
+            .map(RepliesDto::ofEntity)
+            .collect(Collectors.toUnmodifiableList());
+
+        return new RepliesListResponse(repliesListDto);
     }
 }
