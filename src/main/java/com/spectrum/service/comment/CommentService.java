@@ -49,4 +49,14 @@ public class CommentService {
         return CommentUpdateResponse.ofEntity(comment);
     }
 
+    @Transactional
+    @UserValidation
+    public void delete(Long authorId, Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(CommentNotFoundException::new);
+
+        comment.authorCheck(authorId);
+
+        commentRepository.delete(comment);
+    }
 }

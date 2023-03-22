@@ -7,12 +7,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
+@Table(name = "comments")
+@SQLDelete(sql = "update comments set deleted_at = now() where comment_id = ?")
+@Where(clause = "deleted_at is null")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseTimeEntity {
 

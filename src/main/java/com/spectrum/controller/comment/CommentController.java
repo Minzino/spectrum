@@ -9,6 +9,7 @@ import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -54,4 +55,12 @@ public class CommentController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(
+        @CurrentUser Long userId,
+        @PathVariable(name = "commentId") Long commentId) {
+
+        commentService.delete(userId, commentId);
+        return ResponseEntity.noContent().build();
+    }
 }
