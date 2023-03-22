@@ -6,9 +6,8 @@ import com.spectrum.controller.post.dto.PostListResponse;
 import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
 import com.spectrum.domain.user.User;
-import com.spectrum.exception.post.NotAuthorException;
-import com.spectrum.exception.user.UserNotFoundException;
 import com.spectrum.exception.post.PostNotFoundException;
+import com.spectrum.exception.user.UserNotFoundException;
 import com.spectrum.repository.post.PostRepository;
 import com.spectrum.repository.user.UserRepository;
 import com.spectrum.service.post.dto.PostCreateDto;
@@ -45,9 +44,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
             .orElseThrow(PostNotFoundException::new);
 
-        if (!post.getUserId().equals(user.getId())) {
-            throw new NotAuthorException();
-        }
+        post.authorCheck(userId);
 
         post.update(postUpdateDto.getTitle(), postUpdateDto.getContent(), user.getId());
         return PostUpdateResponse.ofEntity(post);
@@ -61,9 +58,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
             .orElseThrow(PostNotFoundException::new);
 
-        if (!post.getUserId().equals(user.getId())) {
-            throw new NotAuthorException();
-        }
+        post.authorCheck(userId);
 
         postRepository.delete(post);
     }

@@ -1,6 +1,7 @@
 package com.spectrum.domain.post;
 
 import com.spectrum.common.domain.BaseTimeEntity;
+import com.spectrum.exception.post.NotAuthorException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,5 +47,11 @@ public class Post extends BaseTimeEntity {
         this.title = title;
         this.content = content;
         this.userId = userId;
+    }
+
+    public void authorCheck(Long authorId) {
+        if (!userId.equals(authorId)) {
+            throw new NotAuthorException();
+        }
     }
 }
