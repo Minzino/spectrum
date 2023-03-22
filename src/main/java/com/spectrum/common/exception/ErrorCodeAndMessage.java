@@ -14,7 +14,9 @@ public enum ErrorCodeAndMessage {
     NOT_AUTHOR("A403 - Not Author", "작성자가 아닙니다.", HttpStatus.FORBIDDEN),
     TOKEN_EXPIRED("T401 - Token Expired", "토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED),
     INVALID_TOKEN("T400 - Invalid Token", "유효하지 않은 토큰입니다.", HttpStatus.BAD_REQUEST),
-    HTTP_SERVLET_REQUEST_NULL("H400 - HttpServletRequest Null", "HttpServletRequest가 null입니다.", HttpStatus.BAD_REQUEST);
+    HTTP_SERVLET_REQUEST_NULL("H400 - HttpServletRequest Null", "HttpServletRequest가 null입니다.",
+        HttpStatus.BAD_REQUEST),
+    COMMENT_NOT_FOUND_EXCEPTION("C404 - Comment Not Found", "댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
 
     private final String code;
     private final String message;
