@@ -12,8 +12,6 @@ import io.restassured.config.RestAssuredConfig;
 import io.restassured.internal.mapping.Jackson2Mapper;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +21,6 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-@TestInstance(Lifecycle.PER_CLASS)
 @ExtendWith(RestDocumentationExtension.class)
 @ActiveProfiles("test")
 public class InitIntegrationDocsTest {
