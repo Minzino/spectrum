@@ -16,7 +16,9 @@ public enum ErrorCodeAndMessage {
     INVALID_TOKEN("T400 - Invalid Token", "유효하지 않은 토큰입니다.", HttpStatus.BAD_REQUEST),
     HTTP_SERVLET_REQUEST_NULL("H400 - HttpServletRequest Null", "HttpServletRequest가 null입니다.",
         HttpStatus.BAD_REQUEST),
-    COMMENT_NOT_FOUND_EXCEPTION("C404 - Comment Not Found", "댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+    COMMENT_NOT_FOUND_EXCEPTION("C404 - Comment Not Found", "댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    NOT_PARENT_EXCEPTION("P400 - This Comment is Not Parent", "해당 댓글에는 대댓글을 작성할 수 없습니다.",
+        HttpStatus.BAD_REQUEST);
 
     private final String code;
     private final String message;
