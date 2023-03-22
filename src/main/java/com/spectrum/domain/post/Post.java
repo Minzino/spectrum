@@ -1,7 +1,6 @@
 package com.spectrum.domain.post;
 
 import com.spectrum.common.domain.BaseTimeEntity;
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,7 +35,6 @@ public class Post extends BaseTimeEntity {
     private String content;
     private Long userId;
 
-    private LocalDateTime deletedAt;
 
     public Post(String title, String content, Long userId) {
         this.title = title;
