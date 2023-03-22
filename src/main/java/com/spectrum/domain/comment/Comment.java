@@ -53,13 +53,13 @@ public class Comment extends BaseTimeEntity {
     }
 
     public void authorCheck(Long authorId) {
-        if (!this.userId.equals(authorId)) {
+        if (!userId.equals(authorId)) {
             throw new NotAuthorException();
         }
     }
 
     public void parentCheck() {
-        if(this.parentId != null){
+        if(parentId != null){
             throw new NotParentException();
         }
     }
