@@ -28,6 +28,7 @@ public class Comment extends BaseTimeEntity {
     private Long id;
 
     private Long postId;
+    private Long parentId;
     private Long userId;
 
     @Column(length = 500, nullable = false)

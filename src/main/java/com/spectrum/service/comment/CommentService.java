@@ -2,6 +2,7 @@ package com.spectrum.service.comment;
 
 import com.spectrum.auth.aop.UserValidation;
 import com.spectrum.controller.comment.dto.CommentCreateResponse;
+import com.spectrum.controller.comment.dto.CommentListResponse;
 import com.spectrum.controller.comment.dto.CommentUpdateResponse;
 import com.spectrum.domain.comment.Comment;
 import com.spectrum.domain.post.Post;
@@ -10,7 +11,10 @@ import com.spectrum.exception.post.PostNotFoundException;
 import com.spectrum.repository.comment.CommentRepository;
 import com.spectrum.repository.post.PostRepository;
 import com.spectrum.service.comment.dto.CommentCreateDto;
+import com.spectrum.service.comment.dto.CommentDto;
 import com.spectrum.service.comment.dto.CommentUpdateDto;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,5 +62,13 @@ public class CommentService {
         comment.authorCheck(authorId);
 
         commentRepository.delete(comment);
+    }
+
+    public CommentListResponse findAll(Long postId) {
+        List<Comment> comments = commentRepository.findByPostIdAndParentIdIsNull(postId);
+        List<CommentDto> commentDtos = comments.stream()
+            .map(CommentDto::ofEntity)
+            .collect(Collectors.toUnmodifiableList());
+        return new CommentListResponse(commentDtos);
     }
 }

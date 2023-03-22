@@ -3,6 +3,7 @@ package com.spectrum.controller.comment;
 import com.spectrum.common.resolver.CurrentUser;
 import com.spectrum.controller.comment.dto.CommentCreateRequest;
 import com.spectrum.controller.comment.dto.CommentCreateResponse;
+import com.spectrum.controller.comment.dto.CommentListResponse;
 import com.spectrum.controller.comment.dto.CommentUpdateRequest;
 import com.spectrum.service.comment.CommentService;
 import java.net.URI;
@@ -10,6 +11,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -62,5 +64,13 @@ public class CommentController {
 
         commentService.delete(userId, commentId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/posts/{postId}/comments")
+    public ResponseEntity<CommentListResponse> getAllComments(
+        @PathVariable(name = "postId") Long postId) {
+
+        CommentListResponse commentListResponse = commentService.findAll(postId);
+        return ResponseEntity.ok().body(commentListResponse);
     }
 }
