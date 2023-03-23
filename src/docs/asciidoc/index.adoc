@@ -4,7 +4,6 @@ v0.0.1, 23-02-26
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
-// 문서의 목차를 왼쪽에 부여한다.
 :toc: left
 :toclevels: 2
 :toc-title: 목차
@@ -13,3 +12,6 @@ v0.0.1, 23-02-26
 
 == 게시글 CRUD API
 include::{docdir}/post/post.adoc[]
+
+== 댓글 CRUD API
+include::{docdir}/comment/comment.adoc[]

@@ -1,0 +1,71 @@
+=== 댓글 조회
+
+API : `GET /api/posts/{postId}/comments`
+
+==== Request
+
+include::{snippets}/comment-findAll/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/comment-findAll/http-response.adoc[]
+
+=== 대댓글 조회
+
+API : `GET /api/comments/{commentId}/replies`
+
+==== Request
+
+include::{snippets}/reply-findAll/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/reply-findAll/http-response.adoc[]
+
+=== 댓글 등록
+
+API : `POST /api/posts/{postId}/comments`
+
+==== Request
+
+include::{snippets}/comment-create/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/comment-create/http-response.adoc[]
+
+=== 대댓글 등록
+
+API : `POST /api/comments/{commentId}/replies`
+
+==== Request
+
+include::{snippets}/reply-create/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/reply-create/http-response.adoc[]
+
+=== 댓글 수정
+
+API : `PUT /api/posts/{postId}/comments/{commentId}`
+
+==== Request
+
+include::{snippets}/comment-update/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/comment-update/http-response.adoc[]
+
+=== 댓글 삭제
+
+API : `DELETE /api/comments/{commentId}`
+
+==== Request
+
+include::{snippets}/comment-delete/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/comment-delete/http-response.adoc[]
