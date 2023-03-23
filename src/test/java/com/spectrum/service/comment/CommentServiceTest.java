@@ -23,21 +23,17 @@ import com.spectrum.service.comment.dto.RepliesCreateDto;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @DisplayName("댓글 서비스 테스트")
-@TestInstance(Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
-@Transactional
 @SpringBootTest
 class CommentServiceTest {
 
@@ -60,7 +56,7 @@ class CommentServiceTest {
     Comment comment;
     Comment recomment;
 
-    @BeforeAll
+    @BeforeEach
     void init() {
         user1 = userRepository.save(
             new User(USER1_ID, "12345678", "username1", "email1", "imageUrl1", Authority.GUEST)
@@ -79,6 +75,12 @@ class CommentServiceTest {
         );
     }
 
+    @AfterEach
+    void teardown() {
+        commentRepository.deleteAll();
+        postRepository.deleteAll();
+    }
+
     @Test
     @DisplayName("정상적인 댓글 생성 요청 시 댓글 생성 성공")
     void create_comment_success() {
@@ -91,8 +93,8 @@ class CommentServiceTest {
         // then
         SoftAssertions.assertSoftly(
             softly -> {
-                softly.assertThat(response.getUserId()).isEqualTo(USER1_ID);
-                softly.assertThat(response.getPostId()).isEqualTo(1L);
+                softly.assertThat(response.getUserId()).isEqualTo(user1.getId());
+                softly.assertThat(response.getPostId()).isEqualTo(post.getId());
                 softly.assertThat(response.getContent()).isEqualTo("댓글입니다.");
             }
         );
@@ -111,10 +113,10 @@ class CommentServiceTest {
         //then
         SoftAssertions.assertSoftly(
             softly -> {
-                softly.assertThat(response.getCommentId()).isEqualTo(1L);
+                softly.assertThat(response.getCommentId()).isEqualTo(comment.getId());
                 softly.assertThat(response.getContent()).isEqualTo("수정된 댓글입니다.");
-                softly.assertThat(response.getUserId()).isEqualTo(1L);
-                softly.assertThat(response.getPostId()).isEqualTo(1L);
+                softly.assertThat(response.getUserId()).isEqualTo(USER1_ID);
+                softly.assertThat(response.getPostId()).isEqualTo(post.getId());
             }
         );
     }
@@ -153,9 +155,8 @@ class CommentServiceTest {
         // then
         SoftAssertions.assertSoftly(
             softly -> {
-                softly.assertThat(response.getParentId()).isEqualTo(1L);
-                softly.assertThat(response.getUserId()).isEqualTo(1L);
-                softly.assertThat(response.getPostId()).isEqualTo(1L);
+                softly.assertThat(response.getParentId()).isEqualTo(comment.getId());
+                softly.assertThat(response.getUserId()).isEqualTo(USER1_ID);
                 softly.assertThat(response.getContent()).isEqualTo("대댓글 입니다.");
             }
         );
