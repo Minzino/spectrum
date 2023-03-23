@@ -19,20 +19,16 @@ import com.spectrum.service.post.dto.PostCreateDto;
 import com.spectrum.service.post.dto.PostUpdateDto;
 import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 @DisplayName("게시글 서비스 테스트")
 @SpringBootTest
-@TestInstance(Lifecycle.PER_CLASS)
-@Transactional
 @ActiveProfiles("test")
 class PostServiceTest {
 
@@ -46,13 +42,14 @@ class PostServiceTest {
 
     Post savePost1;
     Post savePost2;
+    Post savePost3;
     User user1;
     User user2;
     private static final Long USER1_ID = 1L;
     private static final Long USER2_ID = 2L;
     private static final Long FAKE_ID = -1L;
 
-    @BeforeAll
+    @BeforeEach
     void init() {
         user1 = userRepository.save(
             new User(USER1_ID, "12345678", "username1", "email1", "imageUrl1", Authority.GUEST)
@@ -62,6 +59,12 @@ class PostServiceTest {
         );
         savePost1 = postRepository.save(new Post("title", "content", USER1_ID));
         savePost2 = postRepository.save(new Post("title", "content", USER2_ID));
+        savePost3 = postRepository.save(new Post("title", "content", USER1_ID));
+    }
+
+    @AfterEach
+    void teardown() {
+        postRepository.deleteAll();
     }
 
     @DisplayName("정상적인 게시글 생성 요청이 들어온다면 게시글 생성 성공")
@@ -154,7 +157,7 @@ class PostServiceTest {
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(post.getPostId()).isEqualTo(1L);
+            softly.assertThat(post.getPostId()).isEqualTo(savePost1.getId());
             softly.assertThat(post.getTitle()).isEqualTo("title");
             softly.assertThat(post.getContent()).isEqualTo("content");
         });
@@ -175,7 +178,7 @@ class PostServiceTest {
         // given & when
         PostListResponse postList = postService.findAll();
         // then
-        assertThat(postList.getPosts().size()).isEqualTo(2);
+        assertThat(postList.getPosts().size()).isEqualTo(3);
     }
 
     @DisplayName("존재하지 않는 회원이 게시글 생성 요청 시 예외 발생")
