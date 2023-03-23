@@ -55,7 +55,7 @@ public class CommentController {
             , parentId
             , repliesCreateRequest.convertToRepliesDto()
         );
-        URI location = URI.create("/comments/" + createdReplies.getCommentId() + "/replies");
+        URI location = URI.create("/comments/" + createdReplies.getParentId() + "/replies");
         return ResponseEntity.created(location).build();
     }
 
@@ -96,7 +96,7 @@ public class CommentController {
     public ResponseEntity<RepliesListResponse> getAllReplies(
         @PathVariable("commentId") Long parentId) {
 
-        RepliesListResponse repliesListResponse = commentService.findAllByParentId(parentId);
+        RepliesListResponse repliesListResponse = commentService.findAllReplies(parentId);
         return ResponseEntity.ok().body(repliesListResponse);
     }
 }

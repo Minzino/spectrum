@@ -94,7 +94,7 @@ public class CommentService {
         return RepliesCreateResponse.ofEntity(commentRepository.save(reply));
     }
 
-    public RepliesListResponse findAllByParentId(Long parentId) {
+    public RepliesListResponse findAllReplies(Long parentId) {
         List<Comment> repliesList = commentRepository.findAllByParentId(parentId);
         List<RepliesDto> repliesListDto = repliesList.stream()
             .map(RepliesDto::ofEntity)
