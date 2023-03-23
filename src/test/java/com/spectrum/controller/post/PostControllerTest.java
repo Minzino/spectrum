@@ -16,8 +16,7 @@ import com.spectrum.domain.user.Authority;
 import com.spectrum.domain.user.User;
 import com.spectrum.repository.post.PostRepository;
 import com.spectrum.repository.user.UserRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     User user;
     String validToken;
 
-    @BeforeEach
+    @BeforeAll
     void init() {
         user = userRepository.save(
             new User(1L, "123456789", "username", "email", "imageUrl", Authority.GUEST)
@@ -50,12 +49,6 @@ public class PostControllerTest extends InitIntegrationDocsTest {
         savePost1 = postRepository.save(new Post("title1", "content1", user.getId()));
         savePost2 = postRepository.save(new Post("title2", "content2", user.getId()));
         validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
-    }
-
-    @AfterEach
-    void tearDown() {
-        postRepository.deleteAll();
-        userRepository.deleteAll();
     }
 
     @Test
@@ -102,7 +95,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .header("Authorization", "Bearer " + validToken)
             .body(request)
         .when()
-            .put("/api/posts/{postId}", savePost1.getId())
+            .put("/api/posts/{postId}", savePost2.getId())
         .then()
             .statusCode(HttpStatus.OK.value());
     }
@@ -160,5 +153,4 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE);
     }
-
 }
