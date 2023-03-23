@@ -57,4 +57,18 @@ public class GlobalExceptionHandler {
             .status(HttpStatus.BAD_REQUEST)
             .body(errorResponse);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
+        IllegalArgumentException ex) {
+        log.info("Error: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(
+            ErrorCodeAndMessage.INVALID_REQUEST.getCode(),
+            ex.getMessage());
+
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(errorResponse);
+    }
 }
