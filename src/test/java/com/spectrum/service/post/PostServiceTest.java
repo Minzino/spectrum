@@ -19,15 +19,20 @@ import com.spectrum.service.post.dto.PostCreateDto;
 import com.spectrum.service.post.dto.PostUpdateDto;
 import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @DisplayName("게시글 서비스 테스트")
 @SpringBootTest
+@TestInstance(Lifecycle.PER_CLASS)
+@Transactional
 @ActiveProfiles("test")
 class PostServiceTest {
 
@@ -47,7 +52,7 @@ class PostServiceTest {
     private static final Long USER2_ID = 2L;
     private static final Long FAKE_ID = -1L;
 
-    @BeforeEach
+    @BeforeAll
     void init() {
         user1 = userRepository.save(
             new User(USER1_ID, "12345678", "username1", "email1", "imageUrl1", Authority.GUEST)
@@ -63,8 +68,8 @@ class PostServiceTest {
     @Test
     void create_post_success() {
         // given
-        String title = "title1";
-        String content = "content1";
+        String title = "title";
+        String content = "content";
 
         PostCreateDto postCreateDto = new PostCreateDto(title, content);
 
@@ -73,9 +78,9 @@ class PostServiceTest {
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.getUserId()).isEqualTo(USER1_ID);
-            softly.assertThat(response.getContent()).isEqualTo(postCreateDto.getContent());
-            softly.assertThat(response.getTitle()).isEqualTo(postCreateDto.getTitle());
+            softly.assertThat(response.getUserId()).isEqualTo(1L);
+            softly.assertThat(response.getTitle()).isEqualTo("title");
+            softly.assertThat(response.getContent()).isEqualTo("content");
         });
     }
 
@@ -94,9 +99,9 @@ class PostServiceTest {
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.getUserId()).isEqualTo(USER1_ID);
-            softly.assertThat(response.getContent()).isEqualTo(postUpdateDto.getContent());
-            softly.assertThat(response.getTitle()).isEqualTo(postUpdateDto.getTitle());
+            softly.assertThat(response.getUserId()).isEqualTo(1L);
+            softly.assertThat(response.getContent()).isEqualTo("updateContent");
+            softly.assertThat(response.getTitle()).isEqualTo("updateTitle");
         });
     }
 
@@ -149,9 +154,9 @@ class PostServiceTest {
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(post.getPostId()).isEqualTo(postId);
-            softly.assertThat(post.getTitle()).isEqualTo(savePost1.getTitle());
-            softly.assertThat(post.getContent()).isEqualTo(savePost1.getContent());
+            softly.assertThat(post.getPostId()).isEqualTo(1L);
+            softly.assertThat(post.getTitle()).isEqualTo("title");
+            softly.assertThat(post.getContent()).isEqualTo("content");
         });
     }
 
@@ -170,7 +175,7 @@ class PostServiceTest {
         // given & when
         PostListResponse postList = postService.findAll();
         // then
-        assertThat(postList.getPosts().size()).isEqualTo(postRepository.count());
+        assertThat(postList.getPosts().size()).isEqualTo(2);
     }
 
     @DisplayName("존재하지 않는 회원이 게시글 생성 요청 시 예외 발생")
@@ -233,5 +238,4 @@ class PostServiceTest {
             () -> postService.update(savePost2.getUserId(), savePost1.getId(), postUpdateDto))
             .isInstanceOf(NotAuthorException.class);
     }
-
 }
