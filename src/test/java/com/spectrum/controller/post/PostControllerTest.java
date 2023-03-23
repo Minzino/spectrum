@@ -7,12 +7,16 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
+import com.spectrum.auth.provider.JwtProvider;
 import com.spectrum.controller.post.dto.PostCreateRequest;
 import com.spectrum.controller.post.dto.PostUpdateRequest;
 import com.spectrum.documentationtest.InitIntegrationDocsTest;
 import com.spectrum.domain.post.Post;
+import com.spectrum.domain.user.Authority;
+import com.spectrum.domain.user.User;
 import com.spectrum.repository.post.PostRepository;
-import org.junit.jupiter.api.BeforeAll;
+import com.spectrum.repository.user.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +30,31 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @Autowired
     PostRepository postRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    JwtProvider jwtProvider;
+
     Post savePost1;
     Post savePost2;
+    User user;
 
-    @BeforeAll
+    @BeforeEach
     void init() {
         savePost1 = postRepository.save(new Post("title1", "content1", 1L));
         savePost2 = postRepository.save(new Post("title2", "content2", 1L));
+        user = userRepository.save(
+            new User(1L, "123456789", "username", "email", "imageUrl", Authority.GUEST)
+        );
     }
 
     @Test
     @DisplayName("게시글 생성 요청이 정상적인 경우라면 게시글 생성 성공")
     void create_post_success() {
         PostCreateRequest request = new PostCreateRequest("title", "content");
+
+        String validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
 
         given(this.spec)
             .filter(
@@ -49,14 +65,14 @@ public class PostControllerTest extends InitIntegrationDocsTest {
                     )
                 )
             )
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(request)
+            .header("Authorization", "Bearer " + validToken)
 
-        .when()
+            .when()
             .post("/api/posts")
 
-        .then()
+            .then()
             .statusCode(HttpStatus.CREATED.value());
     }
 
@@ -64,6 +80,9 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @DisplayName("게시글 수정 요청이 정상적인 경우라면 게시글 변경 성공")
     void update_post_success() {
         PostUpdateRequest request = new PostUpdateRequest("title", "content");
+
+        String validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
+
         given(this.spec)
             .filter(
                 document("post-update",
@@ -75,6 +94,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             )
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+            .header("Authorization", "Bearer " + validToken)
             .body(request)
         .when()
             .put("/api/posts/{postId}", savePost2.getId())
@@ -85,6 +105,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @Test
     @DisplayName("게시글 삭제 요청이 정상적인 경우라면 게시글 삭제 성공")
     void delete_post_success() {
+        String validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
 
         given(this.spec)
             .filter(
@@ -94,6 +115,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             )
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+            .header("Authorization", "Bearer " + validToken)
         .when()
             .delete("/api/posts/{postId}", savePost1.getId())
         .then()

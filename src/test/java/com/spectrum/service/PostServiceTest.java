@@ -8,8 +8,13 @@ import com.spectrum.controller.post.dto.PostDetailResponse;
 import com.spectrum.controller.post.dto.PostListResponse;
 import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
+import com.spectrum.domain.user.Authority;
+import com.spectrum.domain.user.User;
+import com.spectrum.exception.post.NotAuthorException;
 import com.spectrum.exception.post.PostNotFoundException;
+import com.spectrum.exception.user.UserNotFoundException;
 import com.spectrum.repository.post.PostRepository;
+import com.spectrum.repository.user.UserRepository;
 import com.spectrum.service.dto.PostCreateDto;
 import com.spectrum.service.dto.PostUpdateDto;
 import java.util.Optional;
@@ -31,16 +36,27 @@ class PostServiceTest {
 
     @Autowired
     PostRepository postRepository;
+    @Autowired
+    UserRepository userRepository;
 
     Post savePost1;
     Post savePost2;
-    private static final Long MEMBER_ID = 1L;
+    User user1;
+    User user2;
+    private static final Long USER1_ID = 1L;
+    private static final Long USER2_ID = 2L;
     private static final Long FAKE_ID = -1L;
 
     @BeforeEach
     void init() {
-        savePost1 = postRepository.save(new Post("title", "content", MEMBER_ID));
-        savePost2 = postRepository.save(new Post("title", "content", MEMBER_ID));
+        user1 = userRepository.save(
+            new User(USER1_ID, "12345678", "username1", "email1", "imageUrl1", Authority.GUEST)
+        );
+        user2 = userRepository.save(
+            new User(USER2_ID, "45678", "username2", "email2", "imageUrl2", Authority.GUEST)
+        );
+        savePost1 = postRepository.save(new Post("title", "content", USER1_ID));
+        savePost2 = postRepository.save(new Post("title", "content", USER2_ID));
     }
 
     @DisplayName("정상적인 게시글 생성 요청이 들어온다면 게시글 생성 성공")
@@ -53,11 +69,11 @@ class PostServiceTest {
         PostCreateDto postCreateDto = new PostCreateDto(title, content);
 
         // when
-        PostCreateResponse response = postService.save(MEMBER_ID, postCreateDto);
+        PostCreateResponse response = postService.save(USER1_ID, postCreateDto);
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.getMemberId()).isEqualTo(MEMBER_ID);
+            softly.assertThat(response.getUserId()).isEqualTo(USER1_ID);
             softly.assertThat(response.getContent()).isEqualTo(postCreateDto.getContent());
             softly.assertThat(response.getTitle()).isEqualTo(postCreateDto.getTitle());
         });
@@ -73,11 +89,12 @@ class PostServiceTest {
         PostUpdateDto postUpdateDto = new PostUpdateDto(updateContent, updateTitle);
 
         // when
-        PostUpdateResponse response = postService.update(MEMBER_ID, savePost1.getId(), postUpdateDto);
+        PostUpdateResponse response = postService.update(USER1_ID, savePost1.getId(),
+            postUpdateDto);
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.getMemberId()).isEqualTo(MEMBER_ID);
+            softly.assertThat(response.getUserId()).isEqualTo(USER1_ID);
             softly.assertThat(response.getContent()).isEqualTo(postUpdateDto.getContent());
             softly.assertThat(response.getTitle()).isEqualTo(postUpdateDto.getTitle());
         });
@@ -94,7 +111,7 @@ class PostServiceTest {
 
         // when & then
         assertThatThrownBy(
-            () -> postService.update(MEMBER_ID, FAKE_ID, postUpdateDto))
+            () -> postService.update(USER1_ID, FAKE_ID, postUpdateDto))
             .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -105,7 +122,7 @@ class PostServiceTest {
         Long savePostId = savePost1.getId();
 
         // when
-        postService.delete(MEMBER_ID, savePostId);
+        postService.delete(USER1_ID, savePostId);
         Optional<Post> deletePost = postRepository.findById(savePostId);
 
         // then
@@ -117,7 +134,7 @@ class PostServiceTest {
     void delete_post_failure() {
         // when & then
         assertThatThrownBy(
-            () -> postService.delete(MEMBER_ID, FAKE_ID))
+            () -> postService.delete(USER1_ID, FAKE_ID))
             .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -131,16 +148,19 @@ class PostServiceTest {
         PostDetailResponse post = postService.findPostById(postId);
 
         // then
-        assertThat(post.getPostId()).isEqualTo(postId);
-        assertThat(post.getTitle()).isEqualTo(savePost1.getTitle());
-        assertThat(post.getContent()).isEqualTo(savePost1.getContent());
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(post.getPostId()).isEqualTo(postId);
+            softly.assertThat(post.getTitle()).isEqualTo(savePost1.getTitle());
+            softly.assertThat(post.getContent()).isEqualTo(savePost1.getContent());
+        });
     }
 
     @DisplayName("존재하지 않는 게시글 조회 요청의 경우 예외 발생")
     @Test
     void get_post_by_id_failure() {
         // when & then
-        assertThatThrownBy(() -> postService.findPostById(FAKE_ID))
+        assertThatThrownBy(
+            () -> postService.findPostById(FAKE_ID))
             .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -152,4 +172,66 @@ class PostServiceTest {
         // then
         assertThat(postList.getPosts().size()).isEqualTo(postRepository.count());
     }
+
+    @DisplayName("존재하지 않는 회원이 게시글 생성 요청 시 예외 발생")
+    @Test
+    void create_post_not_user_failure() {
+        // given
+        String title = "title1";
+        String content = "content1";
+
+        PostCreateDto postCreateDto = new PostCreateDto(title, content);
+
+        // when & then
+        assertThatThrownBy(
+            () -> postService.save(FAKE_ID, postCreateDto)
+        ).isInstanceOf(UserNotFoundException.class);
+    }
+
+    @DisplayName("존재하지 않는 회원이 게시글 수정 요청 시 예외 발생")
+    @Test
+    void update_post_not_user_failure() {
+        // given
+        String updateTitle = "updateTitle";
+        String updateContent = "updateContent";
+
+        PostUpdateDto postUpdateDto = new PostUpdateDto(updateContent, updateTitle);
+        // when & then
+        assertThatThrownBy(
+            () -> postService.update(FAKE_ID, savePost1.getId(), postUpdateDto))
+            .isInstanceOf(UserNotFoundException.class);
+    }
+
+    @DisplayName("존재하지 않는 회원이 게시글 삭제 요청 시 예외 발생")
+    @Test
+    void delete_post_not_user_failure() {
+        // when & then
+        assertThatThrownBy(
+            () -> postService.delete(FAKE_ID, savePost1.getId()))
+            .isInstanceOf(UserNotFoundException.class);
+    }
+
+    @DisplayName("글 작성자가 아닌 회원이 삭제 요청 시 예외 발생")
+    @Test
+    void delete_post_not_author_failure() {
+        // when & then
+        assertThatThrownBy(
+            () -> postService.delete(savePost2.getUserId(), savePost1.getId()))
+            .isInstanceOf(NotAuthorException.class);
+    }
+
+    @DisplayName("글 작성자가 아닌 회원이 수정 요청 시 예외 발생")
+    @Test
+    void update_post_not_author_failure() {
+        // given
+        String updateTitle = "updateTitle";
+        String updateContent = "updateContent";
+
+        PostUpdateDto postUpdateDto = new PostUpdateDto(updateContent, updateTitle);
+        // when & then
+        assertThatThrownBy(
+            () -> postService.update(savePost2.getUserId(), savePost1.getId(), postUpdateDto))
+            .isInstanceOf(NotAuthorException.class);
+    }
+
 }

@@ -11,18 +11,18 @@ public class PostUpdateResponse {
 
     private String title;
     private String content;
-    private Long memberId;
+    private Long userId;
 
-    public PostUpdateResponse(String title, String content, Long memberId) {
+    public PostUpdateResponse(String title, String content, Long userId) {
         this.title = title;
         this.content = content;
-        this.memberId = memberId;
+        this.userId = userId;
     }
 
     public static PostUpdateResponse ofEntity(Post updatePost) {
         return new PostUpdateResponse(
             updatePost.getTitle()
             , updatePost.getContent()
-            , updatePost.getMemberId());
+            , updatePost.getUserId());
     }
 }
