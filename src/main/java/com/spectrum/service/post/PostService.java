@@ -1,15 +1,13 @@
 package com.spectrum.service.post;
 
+import com.spectrum.auth.aop.UserValidation;
 import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
 import com.spectrum.controller.post.dto.PostListResponse;
 import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
-import com.spectrum.domain.user.User;
 import com.spectrum.exception.post.PostNotFoundException;
-import com.spectrum.exception.user.UserNotFoundException;
 import com.spectrum.repository.post.PostRepository;
-import com.spectrum.repository.user.UserRepository;
 import com.spectrum.service.post.dto.PostCreateDto;
 import com.spectrum.service.post.dto.PostDto;
 import com.spectrum.service.post.dto.PostUpdateDto;
@@ -25,36 +23,29 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
 
     @Transactional
+    @UserValidation
     public PostCreateResponse save(Long userId, PostCreateDto postCreateDto) {
-
-        User user = userRepository.findById(userId)
-            .orElseThrow(UserNotFoundException::new);
-        Post post = postCreateDto.convertToEntity(user.getId());
+        Post post = postCreateDto.convertToEntity(userId);
         return PostCreateResponse.ofEntity(postRepository.save(post));
     }
 
     @Transactional
+    @UserValidation
     public PostUpdateResponse update(Long userId, Long postId, PostUpdateDto postUpdateDto) {
-
-        User user = userRepository.findById(userId)
-            .orElseThrow(UserNotFoundException::new);
         Post post = postRepository.findById(postId)
             .orElseThrow(PostNotFoundException::new);
 
         post.authorCheck(userId);
 
-        post.update(postUpdateDto.getTitle(), postUpdateDto.getContent(), user.getId());
+        post.update(postUpdateDto.getTitle(), postUpdateDto.getContent(), post.getUserId());
         return PostUpdateResponse.ofEntity(post);
     }
 
     @Transactional
+    @UserValidation
     public void delete(Long userId, Long postId) {
-
-        User user = userRepository.findById(userId)
-            .orElseThrow(UserNotFoundException::new);
         Post post = postRepository.findById(postId)
             .orElseThrow(PostNotFoundException::new);
 
