@@ -1,10 +1,7 @@
 package com.spectrum.auth.provider;
 
 import com.spectrum.auth.JwtProperties;
-import com.spectrum.exception.auth.InvalidTokenException;
-import com.spectrum.exception.auth.TokenExpiredException;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -15,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtProvider {
+
+    private final static String INVALID_TOKEN_MESSAGE = "유효하지 않은 토큰입니다.";
     private final SecretKey secretKey;
     private final long accessTokenValidityInMilliseconds;
     private final long refreshTokenValidityInMilliseconds;
@@ -54,10 +53,8 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
-        } catch (ExpiredJwtException e) {
-            throw new TokenExpiredException();
         } catch (JwtException e) {
-            throw new InvalidTokenException();
+            throw new IllegalArgumentException(INVALID_TOKEN_MESSAGE, e);
         }
     }
 
@@ -70,10 +67,8 @@ public class JwtProvider {
                 .parseClaimsJws(token);
 
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (ExpiredJwtException e) {
-            throw new TokenExpiredException();
         } catch (JwtException | IllegalArgumentException e) {
-            throw new InvalidTokenException();
+            throw new IllegalArgumentException(INVALID_TOKEN_MESSAGE, e);
         }
     }
 }
