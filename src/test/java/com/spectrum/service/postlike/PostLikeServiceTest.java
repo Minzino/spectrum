@@ -80,6 +80,7 @@ class PostLikeServiceTest {
         // given
         PostLikeDto request = new PostLikeDto(true);
 
+        // when & then
         assertThatThrownBy(
             () -> postLikeService.save(-1L, post.getId(), request)
         ).isInstanceOf(UserNotFoundException.class);
