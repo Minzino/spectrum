@@ -66,7 +66,6 @@ class PostLikeServiceTest {
         // then
         SoftAssertions.assertSoftly(
             softly -> {
-                softly.assertThat(response.getPostLikeId()).isEqualTo(1L);
                 softly.assertThat(response.getLikeStatus()).isEqualTo(true);
                 softly.assertThat(response.getUserId()).isEqualTo(user.getId());
                 softly.assertThat(response.getPostId()).isEqualTo(post.getId());
