@@ -11,7 +11,17 @@ v0.0.1, 23-02-26
 :sectnums:
 
 == 게시글 CRUD API
+
 include::{docdir}/post/post.adoc[]
 
 == 댓글 CRUD API
+
 include::{docdir}/comment/comment.adoc[]
+
+== 게시글 좋아요 API
+
+include::{docdir}/postlike/postlike.adoc[]
+
+== 댓글 좋아요 API
+
+include::{docdir}/commentlike/commentlike.adoc[]

@@ -1,0 +1,11 @@
+=== 댓글 좋아요 요청
+
+API : `POST /api/comment/{commentId}/likes`
+
+==== Request
+
+include::{snippets}/commentlike-create/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/commentlike-create/http-response.adoc[]
