@@ -30,9 +30,10 @@ public class PostLikeController {
         PostLikeResponse postLikeResponse = postLikeService.save(
             userId
             , postId
-            , postLikeRequest.convertToPostLikeDto());
+            , postLikeRequest.convertToPostLikeDto()
+        );
 
-        URI location = URI.create("/api/posts/" + postLikeResponse.getPostId() + "/like");
+        URI location = URI.create("/api/posts/" + postLikeResponse.getPostId() + "/likes");
         return ResponseEntity.created(location).build();
     }
 }
