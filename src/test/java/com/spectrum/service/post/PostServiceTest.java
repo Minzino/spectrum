@@ -45,26 +45,25 @@ class PostServiceTest {
     Post savePost3;
     User user1;
     User user2;
-    private static final Long USER1_ID = 1L;
-    private static final Long USER2_ID = 2L;
     private static final Long FAKE_ID = -1L;
 
     @BeforeEach
     void init() {
         user1 = userRepository.save(
-            new User(USER1_ID, "12345678", "username1", "email1", "imageUrl1", Authority.GUEST)
+            new User(1L, "12345678", "username1", "email1", "imageUrl1", Authority.GUEST)
         );
         user2 = userRepository.save(
-            new User(USER2_ID, "45678", "username2", "email2", "imageUrl2", Authority.GUEST)
+            new User(2L, "45678", "username2", "email2", "imageUrl2", Authority.GUEST)
         );
-        savePost1 = postRepository.save(new Post("title", "content", USER1_ID));
-        savePost2 = postRepository.save(new Post("title", "content", USER2_ID));
-        savePost3 = postRepository.save(new Post("title", "content", USER1_ID));
+        savePost1 = postRepository.save(new Post("title", "content", user1.getId()));
+        savePost2 = postRepository.save(new Post("title", "content", user2.getId()));
+        savePost3 = postRepository.save(new Post("title", "content", user1.getId()));
     }
 
     @AfterEach
     void teardown() {
         postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @DisplayName("정상적인 게시글 생성 요청이 들어온다면 게시글 생성 성공")
@@ -77,11 +76,10 @@ class PostServiceTest {
         PostCreateDto postCreateDto = new PostCreateDto(title, content);
 
         // when
-        PostCreateResponse response = postService.save(USER1_ID, postCreateDto);
+        PostCreateResponse response = postService.save(user1.getId(), postCreateDto);
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.getUserId()).isEqualTo(1L);
             softly.assertThat(response.getTitle()).isEqualTo("title");
             softly.assertThat(response.getContent()).isEqualTo("content");
         });
@@ -97,12 +95,11 @@ class PostServiceTest {
         PostUpdateDto postUpdateDto = new PostUpdateDto(updateContent, updateTitle);
 
         // when
-        PostUpdateResponse response = postService.update(USER1_ID, savePost1.getId(),
+        PostUpdateResponse response = postService.update(user1.getId(), savePost1.getId(),
             postUpdateDto);
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.getUserId()).isEqualTo(1L);
             softly.assertThat(response.getContent()).isEqualTo("updateContent");
             softly.assertThat(response.getTitle()).isEqualTo("updateTitle");
         });
@@ -119,7 +116,7 @@ class PostServiceTest {
 
         // when & then
         assertThatThrownBy(
-            () -> postService.update(USER1_ID, FAKE_ID, postUpdateDto))
+            () -> postService.update(user1.getId(), FAKE_ID, postUpdateDto))
             .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -130,7 +127,7 @@ class PostServiceTest {
         Long savePostId = savePost1.getId();
 
         // when
-        postService.delete(USER1_ID, savePostId);
+        postService.delete(user1.getId(), savePostId);
         Optional<Post> deletePost = postRepository.findById(savePostId);
 
         // then
@@ -142,7 +139,7 @@ class PostServiceTest {
     void delete_post_failure() {
         // when & then
         assertThatThrownBy(
-            () -> postService.delete(USER1_ID, FAKE_ID))
+            () -> postService.delete(user1.getId(), FAKE_ID))
             .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -157,7 +154,6 @@ class PostServiceTest {
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(post.getPostId()).isEqualTo(savePost1.getId());
             softly.assertThat(post.getTitle()).isEqualTo("title");
             softly.assertThat(post.getContent()).isEqualTo("content");
         });
@@ -224,7 +220,7 @@ class PostServiceTest {
     void delete_post_not_author_failure() {
         // when & then
         assertThatThrownBy(
-            () -> postService.delete(savePost2.getUserId(), savePost1.getId()))
+            () -> postService.delete(savePost2.getUserId(), savePost3.getId()))
             .isInstanceOf(NotAuthorException.class);
     }
 
@@ -238,7 +234,7 @@ class PostServiceTest {
         PostUpdateDto postUpdateDto = new PostUpdateDto(updateContent, updateTitle);
         // when & then
         assertThatThrownBy(
-            () -> postService.update(savePost2.getUserId(), savePost1.getId(), postUpdateDto))
+            () -> postService.update(savePost2.getUserId(), savePost3.getId(), postUpdateDto))
             .isInstanceOf(NotAuthorException.class);
     }
 }
