@@ -115,7 +115,7 @@ class CommentServiceTest {
             softly -> {
                 softly.assertThat(response.getCommentId()).isEqualTo(comment.getId());
                 softly.assertThat(response.getContent()).isEqualTo("수정된 댓글입니다.");
-                softly.assertThat(response.getUserId()).isEqualTo(USER1_ID);
+                softly.assertThat(response.getUserId()).isEqualTo(user1.getId());
                 softly.assertThat(response.getPostId()).isEqualTo(post.getId());
             }
         );
@@ -156,7 +156,7 @@ class CommentServiceTest {
         SoftAssertions.assertSoftly(
             softly -> {
                 softly.assertThat(response.getParentId()).isEqualTo(comment.getId());
-                softly.assertThat(response.getUserId()).isEqualTo(USER1_ID);
+                softly.assertThat(response.getUserId()).isEqualTo(user1.getId());
                 softly.assertThat(response.getContent()).isEqualTo("대댓글 입니다.");
             }
         );
@@ -225,7 +225,7 @@ class CommentServiceTest {
 
         // when & then
         assertThatThrownBy(
-            () -> commentService.saveReplies(USER1_ID, recomment.getId(), request)
+            () -> commentService.saveReplies(user1.getId(), recomment.getId(), request)
         ).isInstanceOf(NotParentException.class);
     }
 }
