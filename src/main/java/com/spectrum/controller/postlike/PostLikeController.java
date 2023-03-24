@@ -34,6 +34,6 @@ public class PostLikeController {
         );
 
         URI location = URI.create("/api/posts/" + postLikeResponse.getPostId() + "/likes");
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(postLikeResponse);
     }
 }

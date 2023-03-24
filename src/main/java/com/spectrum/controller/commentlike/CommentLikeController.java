@@ -34,6 +34,6 @@ public class CommentLikeController {
         );
 
         URI location = URI.create("/api/comments/" + commentLikeResponse.getCommentId() + "/likes");
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(commentLikeResponse);
     }
 }
