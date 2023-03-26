@@ -2,6 +2,7 @@ package com.spectrum.controller.postlike.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.spectrum.service.postlike.dto.PostLikeDto;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class PostLikeRequest {
 
     @JsonProperty("like_status")
+    @NotNull
     private Boolean likeStatus;
 
     public PostLikeRequest(Boolean likeStatus) {
