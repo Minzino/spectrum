@@ -1,4 +1,4 @@
-package com.spectrum.auth.dto;
+package com.spectrum.common.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

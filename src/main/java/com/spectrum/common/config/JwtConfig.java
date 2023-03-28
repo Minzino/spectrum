@@ -1,6 +1,6 @@
-package com.spectrum.config;
+package com.spectrum.common.config;
 
-import com.spectrum.auth.JwtProperties;
+import com.spectrum.common.auth.JwtProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

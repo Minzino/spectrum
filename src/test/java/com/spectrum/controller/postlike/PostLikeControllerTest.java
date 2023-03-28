@@ -5,7 +5,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.spectrum.auth.provider.JwtProvider;
+import com.spectrum.common.auth.provider.JwtProvider;
 import com.spectrum.controller.postlike.dto.PostLikeRequest;
 import com.spectrum.documentationtest.InitIntegrationDocsTest;
 import com.spectrum.domain.post.Post;

@@ -1,6 +1,6 @@
-package com.spectrum.auth.provider;
+package com.spectrum.common.auth.provider;
 
-import com.spectrum.auth.OAuthProperties;
+import com.spectrum.common.auth.OAuthProperties;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.AccessLevel;

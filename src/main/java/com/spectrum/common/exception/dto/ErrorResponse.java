@@ -1,4 +1,4 @@
-package com.spectrum.common.dto;
+package com.spectrum.common.exception.dto;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.spectrum.service.comment;
 
-import com.spectrum.auth.aop.UserValidation;
+import com.spectrum.common.aop.UserValidation;
 import com.spectrum.controller.comment.dto.CommentCreateResponse;
 import com.spectrum.controller.comment.dto.CommentListResponse;
 import com.spectrum.controller.comment.dto.CommentUpdateResponse;

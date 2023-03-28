@@ -1,6 +1,6 @@
 package com.spectrum.service.post;
 
-import com.spectrum.auth.aop.UserValidation;
+import com.spectrum.common.aop.UserValidation;
 import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
 import com.spectrum.controller.post.dto.PostListResponse;

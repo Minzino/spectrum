@@ -1,4 +1,4 @@
-package com.spectrum.auth.aop;
+package com.spectrum.common.aop;
 
 import com.spectrum.exception.user.UserNotFoundException;
 import com.spectrum.repository.user.UserRepository;
@@ -15,7 +15,7 @@ public class UserValidationAspect {
 
     private final UserRepository userRepository;
 
-    @Before("@annotation(com.spectrum.auth.aop.UserValidation)")
+    @Before("@annotation(com.spectrum.common.aop.UserValidation)")
     public void validateUser(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         Long id = (Long) args[0];

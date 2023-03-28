@@ -1,4 +1,4 @@
-package com.spectrum.config;
+package com.spectrum.common.config;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;

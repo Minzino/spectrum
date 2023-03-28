@@ -1,4 +1,4 @@
-package com.spectrum.config;
+package com.spectrum.common.config;
 
 import com.spectrum.common.resolver.UserArgumentResolver;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.spectrum.auth.provider;
+package com.spectrum.common.auth.provider;
 
 import java.util.Map;
 

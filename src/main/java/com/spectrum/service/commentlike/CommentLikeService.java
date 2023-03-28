@@ -1,6 +1,6 @@
 package com.spectrum.service.commentlike;
 
-import com.spectrum.auth.aop.UserValidation;
+import com.spectrum.common.aop.UserValidation;
 import com.spectrum.controller.commentlike.dto.CommentLikeResponse;
 import com.spectrum.domain.comment.Comment;
 import com.spectrum.domain.commentlike.CommentLike;

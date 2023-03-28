@@ -1,6 +1,6 @@
-package com.spectrum.auth;
+package com.spectrum.common.auth;
 
-import com.spectrum.auth.dto.UserProfile;
+import com.spectrum.common.auth.dto.UserProfile;
 import java.util.Arrays;
 import java.util.Map;
 import lombok.Getter;

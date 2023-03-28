@@ -1,8 +1,8 @@
-package com.spectrum.auth.controller;
+package com.spectrum.common.auth.controller;
 
 
-import com.spectrum.auth.service.OAuthService;
-import com.spectrum.auth.dto.LoginResponse;
+import com.spectrum.common.auth.service.OAuthService;
+import com.spectrum.common.auth.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

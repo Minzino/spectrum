@@ -1,6 +1,6 @@
 package com.spectrum.service.postlike;
 
-import com.spectrum.auth.aop.UserValidation;
+import com.spectrum.common.aop.UserValidation;
 import com.spectrum.controller.postlike.dto.PostLikeResponse;
 import com.spectrum.domain.post.Post;
 import com.spectrum.domain.postlike.PostLike;

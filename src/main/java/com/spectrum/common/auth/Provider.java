@@ -1,4 +1,4 @@
-package com.spectrum.auth;
+package com.spectrum.common.auth;
 
 import lombok.Getter;
 

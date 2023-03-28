@@ -7,7 +7,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.spectrum.auth.provider.JwtProvider;
+import com.spectrum.common.auth.provider.JwtProvider;
 import com.spectrum.controller.comment.dto.CommentCreateRequest;
 import com.spectrum.controller.comment.dto.CommentUpdateRequest;
 import com.spectrum.documentationtest.InitIntegrationDocsTest;

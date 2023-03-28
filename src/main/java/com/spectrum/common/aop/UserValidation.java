@@ -1,4 +1,4 @@
-package com.spectrum.auth.aop;
+package com.spectrum.common.aop;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

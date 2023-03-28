@@ -1,4 +1,4 @@
-package com.spectrum.auth.dto;
+package com.spectrum.common.auth.dto;
 
 import com.spectrum.domain.user.Authority;
 import com.spectrum.domain.user.User;

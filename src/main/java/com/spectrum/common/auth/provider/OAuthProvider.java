@@ -1,7 +1,7 @@
-package com.spectrum.auth.provider;
+package com.spectrum.common.auth.provider;
 
-import com.spectrum.auth.dto.ProviderPropertiesDto;
-import com.spectrum.auth.dto.UserPropertiesDto;
+import com.spectrum.common.auth.dto.ProviderPropertiesDto;
+import com.spectrum.common.auth.dto.UserPropertiesDto;
 import lombok.Builder;
 import lombok.Getter;
 

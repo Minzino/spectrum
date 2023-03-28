@@ -1,6 +1,6 @@
 package com.spectrum.common.resolver;
 
-import com.spectrum.auth.provider.JwtProvider;
+import com.spectrum.common.auth.provider.JwtProvider;
 import java.util.Objects;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;

@@ -1,12 +1,12 @@
-package com.spectrum.auth.service;
+package com.spectrum.common.auth.service;
 
-import com.spectrum.auth.provider.InMemoryProviderRepository;
-import com.spectrum.auth.provider.OAuthProvider;
-import com.spectrum.auth.provider.JwtProvider;
-import com.spectrum.auth.OAuthAttributes;
-import com.spectrum.auth.dto.LoginResponse;
-import com.spectrum.auth.dto.OAuthTokenResponse;
-import com.spectrum.auth.dto.UserProfile;
+import com.spectrum.common.auth.provider.InMemoryProviderRepository;
+import com.spectrum.common.auth.provider.OAuthProvider;
+import com.spectrum.common.auth.provider.JwtProvider;
+import com.spectrum.common.auth.OAuthAttributes;
+import com.spectrum.common.auth.dto.LoginResponse;
+import com.spectrum.common.auth.dto.OAuthTokenResponse;
+import com.spectrum.common.auth.dto.UserProfile;
 import com.spectrum.domain.user.User;
 import com.spectrum.repository.user.UserRepository;
 import java.nio.charset.StandardCharsets;

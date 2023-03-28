@@ -1,7 +1,7 @@
-package com.spectrum.auth;
+package com.spectrum.common.auth;
 
-import com.spectrum.auth.dto.ProviderPropertiesDto;
-import com.spectrum.auth.dto.UserPropertiesDto;
+import com.spectrum.common.auth.dto.ProviderPropertiesDto;
+import com.spectrum.common.auth.dto.UserPropertiesDto;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.spectrum.auth;
+package com.spectrum.common.auth;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

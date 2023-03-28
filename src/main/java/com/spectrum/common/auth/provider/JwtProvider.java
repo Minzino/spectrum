@@ -1,6 +1,6 @@
-package com.spectrum.auth.provider;
+package com.spectrum.common.auth.provider;
 
-import com.spectrum.auth.JwtProperties;
+import com.spectrum.common.auth.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;

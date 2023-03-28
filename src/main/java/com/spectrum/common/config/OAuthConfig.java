@@ -1,9 +1,9 @@
-package com.spectrum.config;
+package com.spectrum.common.config;
 
-import com.spectrum.auth.provider.InMemoryProviderRepository;
-import com.spectrum.auth.OAuthProperties;
-import com.spectrum.auth.provider.OAuthProvider;
-import com.spectrum.auth.provider.OAuthProviderConverter;
+import com.spectrum.common.auth.provider.InMemoryProviderRepository;
+import com.spectrum.common.auth.OAuthProperties;
+import com.spectrum.common.auth.provider.OAuthProvider;
+import com.spectrum.common.auth.provider.OAuthProviderConverter;
 import java.util.Map;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
