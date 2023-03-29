@@ -457,6 +457,26 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_게시글_전체_조회">1.5. 게시글 전체 조회</a></li>
 </ul>
 </li>
+<li><a href="#_댓글_crud_api">2. 댓글 CRUD API</a>
+<ul class="sectlevel2">
+<li><a href="#_댓글_조회">2.1. 댓글 조회</a></li>
+<li><a href="#_대댓글_조회">2.2. 대댓글 조회</a></li>
+<li><a href="#_댓글_등록">2.3. 댓글 등록</a></li>
+<li><a href="#_대댓글_등록">2.4. 대댓글 등록</a></li>
+<li><a href="#_댓글_수정">2.5. 댓글 수정</a></li>
+<li><a href="#_댓글_삭제">2.6. 댓글 삭제</a></li>
+</ul>
+</li>
+<li><a href="#_게시글_좋아요_api">3. 게시글 좋아요 API</a>
+<ul class="sectlevel2">
+<li><a href="#_게시글_좋아요_요청">3.1. 게시글 좋아요 요청</a></li>
+</ul>
+</li>
+<li><a href="#_댓글_좋아요_api">4. 댓글 좋아요 API</a>
+<ul class="sectlevel2">
+<li><a href="#_댓글_좋아요_요청">4.1. 댓글 좋아요 요청</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -474,9 +494,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/posts HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWQiOiIxIiwiaWF0IjoxNjc5MDc3MzY4LCJleHAiOjE2NzkwNzc5Njh9.kJVvIDJCczM3EAlOf8QeXcFdixrf57jw2-zD-lfFM-w
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc5NjQ3OTA3LCJleHAiOjE2Nzk2NDg1MDd9.Ej5zbOCioWO0AcCKKgvAOt1nLahBgaz2bGdvj6WOmzo
 Content-Type: application/json
-Host: localhost:59067
+Host: localhost:57994
 Content-Length: 48
 
 {
@@ -491,8 +511,8 @@ Content-Length: 48
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
-Location: /api/posts5
-Date: Fri, 17 Mar 2023 18:22:48 GMT
+Location: /api/posts/5
+Date: Fri, 24 Mar 2023 08:51:47 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
@@ -508,16 +528,16 @@ Connection: keep-alive</code></pre>
 <h4 id="_request_2"><a class="link" href="#_request_2">1.2.1. Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /api/posts/11 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /api/posts/3 HTTP/1.1
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWQiOiIxIiwiaWF0IjoxNjc5MDc3MzY4LCJleHAiOjE2NzkwNzc5Njh9.kJVvIDJCczM3EAlOf8QeXcFdixrf57jw2-zD-lfFM-w
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc5NjQ3OTA3LCJleHAiOjE2Nzk2NDg1MDd9.Ej5zbOCioWO0AcCKKgvAOt1nLahBgaz2bGdvj6WOmzo
 Content-Type: application/json
-Host: localhost:59067
-Content-Length: 48
+Host: localhost:57994
+Content-Length: 62
 
 {
-  "title" : "title",
-  "content" : "content"
+  "title" : "update title",
+  "content" : "update content"
 }</code></pre>
 </div>
 </div>
@@ -527,7 +547,7 @@ Content-Length: 48
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Date: Fri, 17 Mar 2023 18:22:48 GMT
+Date: Fri, 24 Mar 2023 08:51:47 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
@@ -543,11 +563,11 @@ Connection: keep-alive</code></pre>
 <h4 id="_request_3"><a class="link" href="#_request_3">1.3.1. Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /api/posts/8 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /api/posts/4 HTTP/1.1
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWQiOiIxIiwiaWF0IjoxNjc5MDc3MzY4LCJleHAiOjE2NzkwNzc5Njh9.kJVvIDJCczM3EAlOf8QeXcFdixrf57jw2-zD-lfFM-w
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc5NjQ3OTA3LCJleHAiOjE2Nzk2NDg1MDd9.Ej5zbOCioWO0AcCKKgvAOt1nLahBgaz2bGdvj6WOmzo
 Content-Type: application/json
-Host: localhost:59067</code></pre>
+Host: localhost:57994</code></pre>
 </div>
 </div>
 </div>
@@ -556,7 +576,7 @@ Host: localhost:59067</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
-Date: Fri, 17 Mar 2023 18:22:48 GMT
+Date: Fri, 24 Mar 2023 08:51:47 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
@@ -572,10 +592,10 @@ Connection: keep-alive</code></pre>
 <h4 id="_request_4"><a class="link" href="#_request_4">1.4.1. Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/posts/7 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/posts/4 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59067</code></pre>
+Host: localhost:57994</code></pre>
 </div>
 </div>
 </div>
@@ -586,15 +606,15 @@ Host: localhost:59067</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 17 Mar 2023 18:22:48 GMT
+Date: Fri, 24 Mar 2023 08:51:47 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 Content-Length: 66
 
 {
-  "postId" : 7,
-  "title" : "title2",
-  "content" : "content2"
+  "postId" : 4,
+  "title" : "title3",
+  "content" : "content3"
 }</code></pre>
 </div>
 </div>
@@ -612,7 +632,7 @@ Content-Length: 66
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/posts HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59067</code></pre>
+Host: localhost:57994</code></pre>
 </div>
 </div>
 </div>
@@ -623,21 +643,371 @@ Host: localhost:59067</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 17 Mar 2023 18:22:48 GMT
+Date: Fri, 24 Mar 2023 08:51:47 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-Content-Length: 170
+Content-Length: 323
 
 {
   "posts" : [ {
     "postId" : 1,
+    "title" : "제목",
+    "content" : "게시글"
+  }, {
+    "postId" : 2,
     "title" : "title1",
     "content" : "content1"
   }, {
-    "postId" : 2,
+    "postId" : 3,
     "title" : "title2",
     "content" : "content2"
+  }, {
+    "postId" : 4,
+    "title" : "title3",
+    "content" : "content3"
   } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_댓글_crud_api"><a class="link" href="#_댓글_crud_api">2. 댓글 CRUD API</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_댓글_조회"><a class="link" href="#_댓글_조회">2.1. 댓글 조회</a></h3>
+<div class="paragraph">
+<p>API : <code>GET /api/posts/{postId}/comments</code></p>
+</div>
+<div class="sect3">
+<h4 id="_request_6"><a class="link" href="#_request_6">2.1.1. Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/posts/1/comments HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: localhost:57994</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_6"><a class="link" href="#_response_6">2.1.2. Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 24 Mar 2023 08:51:47 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+Content-Length: 414
+
+{
+  "comments" : [ {
+    "commentId" : 2,
+    "userId" : 1,
+    "postId" : 1,
+    "content" : "수정된 댓글입니다.",
+    "createdAt" : "2023-03-24T17:51:46.530836",
+    "modifiedAt" : "2023-03-24T17:51:47.279697"
+  }, {
+    "commentId" : 3,
+    "userId" : 1,
+    "postId" : 1,
+    "content" : "content",
+    "createdAt" : "2023-03-24T17:51:46.537143",
+    "modifiedAt" : "2023-03-24T17:51:46.537143"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_대댓글_조회"><a class="link" href="#_대댓글_조회">2.2. 대댓글 조회</a></h3>
+<div class="paragraph">
+<p>API : <code>GET /api/comments/{commentId}/replies</code></p>
+</div>
+<div class="sect3">
+<h4 id="_request_7"><a class="link" href="#_request_7">2.2.1. Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/comments/2/replies HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: localhost:57994</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_7"><a class="link" href="#_response_7">2.2.2. Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 24 Mar 2023 08:51:47 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+Content-Length: 654
+
+{
+  "repliesDtos" : [ {
+    "commentId" : 4,
+    "userId" : 1,
+    "postId" : 1,
+    "parentId" : 2,
+    "content" : "re-content",
+    "createdAt" : "2023-03-24T17:51:46.543863",
+    "modifiedAt" : "2023-03-24T17:51:46.543863"
+  }, {
+    "commentId" : 5,
+    "userId" : 1,
+    "postId" : 1,
+    "parentId" : 2,
+    "content" : "re-content",
+    "createdAt" : "2023-03-24T17:51:46.551191",
+    "modifiedAt" : "2023-03-24T17:51:46.551191"
+  }, {
+    "commentId" : 6,
+    "userId" : 1,
+    "postId" : 1,
+    "parentId" : 2,
+    "content" : "re-content",
+    "createdAt" : "2023-03-24T17:51:46.560452",
+    "modifiedAt" : "2023-03-24T17:51:46.560452"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_댓글_등록"><a class="link" href="#_댓글_등록">2.3. 댓글 등록</a></h3>
+<div class="paragraph">
+<p>API : <code>POST /api/posts/{postId}/comments</code></p>
+</div>
+<div class="sect3">
+<h4 id="_request_8"><a class="link" href="#_request_8">2.3.1. Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/posts/1/comments HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc5NjQ3OTA2LCJleHAiOjE2Nzk2NDg1MDZ9.siLbrb4aw4Uxv6V2ntECh6tpREJXFtb40Ea5WfI82zM
+Content-Type: application/json
+Host: localhost:57994
+Content-Length: 33
+
+{
+  "content" : "댓글 내용"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_8"><a class="link" href="#_response_8">2.3.2. Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Location: /api/posts/1/comments
+Date: Fri, 24 Mar 2023 08:51:47 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_대댓글_등록"><a class="link" href="#_대댓글_등록">2.4. 대댓글 등록</a></h3>
+<div class="paragraph">
+<p>API : <code>POST /api/comments/{commentId}/replies</code></p>
+</div>
+<div class="sect3">
+<h4 id="_request_9"><a class="link" href="#_request_9">2.4.1. Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/comments/2/replies HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc5NjQ3OTA2LCJleHAiOjE2Nzk2NDg1MDZ9.siLbrb4aw4Uxv6V2ntECh6tpREJXFtb40Ea5WfI82zM
+Content-Type: application/json
+Host: localhost:57994
+Content-Length: 40
+
+{
+  "content" : "대댓글 입니다."
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_9"><a class="link" href="#_response_9">2.4.2. Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Location: /comments/2/replies
+Date: Fri, 24 Mar 2023 08:51:47 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_댓글_수정"><a class="link" href="#_댓글_수정">2.5. 댓글 수정</a></h3>
+<div class="paragraph">
+<p>API : <code>PUT /api/posts/{postId}/comments/{commentId}</code></p>
+</div>
+<div class="sect3">
+<h4 id="_request_10"><a class="link" href="#_request_10">2.5.1. Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /api/posts/1/comments/2 HTTP/1.1
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc5NjQ3OTA2LCJleHAiOjE2Nzk2NDg1MDZ9.siLbrb4aw4Uxv6V2ntECh6tpREJXFtb40Ea5WfI82zM
+Content-Type: application/json
+Host: localhost:57994
+Content-Length: 46
+
+{
+  "content" : "수정된 댓글입니다."
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_10"><a class="link" href="#_response_10">2.5.2. Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Date: Fri, 24 Mar 2023 08:51:47 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_댓글_삭제"><a class="link" href="#_댓글_삭제">2.6. 댓글 삭제</a></h3>
+<div class="paragraph">
+<p>API : <code>DELETE /api/comments/{commentId}</code></p>
+</div>
+<div class="sect3">
+<h4 id="_request_11"><a class="link" href="#_request_11">2.6.1. Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /api/comments/1 HTTP/1.1
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc5NjQ3OTA2LCJleHAiOjE2Nzk2NDg1MDZ9.siLbrb4aw4Uxv6V2ntECh6tpREJXFtb40Ea5WfI82zM
+Content-Type: application/json
+Host: localhost:57994</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_11"><a class="link" href="#_response_11">2.6.2. Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Date: Fri, 24 Mar 2023 08:51:47 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_게시글_좋아요_api"><a class="link" href="#_게시글_좋아요_api">3. 게시글 좋아요 API</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_게시글_좋아요_요청"><a class="link" href="#_게시글_좋아요_요청">3.1. 게시글 좋아요 요청</a></h3>
+<div class="paragraph">
+<p>API : <code>POST /api/posts/{postId}/likes</code></p>
+</div>
+<div class="sect3">
+<h4 id="_request_12"><a class="link" href="#_request_12">3.1.1. Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/posts/6/likes HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc5NjQ3OTA3LCJleHAiOjE2Nzk2NDg1MDd9.Ej5zbOCioWO0AcCKKgvAOt1nLahBgaz2bGdvj6WOmzo
+Content-Type: application/json
+Host: localhost:57994
+Content-Length: 26
+
+{
+  "like_status" : true
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_12"><a class="link" href="#_response_12">3.1.2. Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Location: /api/posts/6/likes
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 24 Mar 2023 08:51:47 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+Content-Length: 77
+
+{
+  "postLikeId" : 1,
+  "postId" : 6,
+  "userId" : 1,
+  "likeStatus" : true
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_댓글_좋아요_api"><a class="link" href="#_댓글_좋아요_api">4. 댓글 좋아요 API</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_댓글_좋아요_요청"><a class="link" href="#_댓글_좋아요_요청">4.1. 댓글 좋아요 요청</a></h3>
+<div class="paragraph">
+<p>API : <code>POST /api/comment/{commentId}/likes</code></p>
+</div>
+<div class="sect3">
+<h4 id="_request_13"><a class="link" href="#_request_13">4.1.1. Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/comments/9/likes HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc5NjQ3OTA3LCJleHAiOjE2Nzk2NDg1MDd9.Ej5zbOCioWO0AcCKKgvAOt1nLahBgaz2bGdvj6WOmzo
+Content-Type: application/json
+Host: localhost:57994
+Content-Length: 26
+
+{
+  "like_status" : true
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_13"><a class="link" href="#_response_13">4.1.2. Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Location: /api/comments/9/likes
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 24 Mar 2023 08:51:47 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+Content-Length: 83
+
+{
+  "commentLikeId" : 1,
+  "commentId" : 9,
+  "userId" : 1,
+  "likeStatus" : true
 }</code></pre>
 </div>
 </div>
@@ -649,7 +1019,7 @@ Content-Length: 170
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-03-18 03:21:44 +0900
+Last updated 2023-03-24 17:00:52 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

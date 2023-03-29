@@ -1,0 +1,11 @@
+=== 게시글 좋아요 요청
+
+API : `POST /api/posts/{postId}/likes`
+
+==== Request
+
+include::{snippets}/postlike-create/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/postlike-create/http-response.adoc[]

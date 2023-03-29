@@ -7,7 +7,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.spectrum.auth.provider.JwtProvider;
+import com.spectrum.common.auth.provider.JwtProvider;
 import com.spectrum.controller.post.dto.PostCreateRequest;
 import com.spectrum.controller.post.dto.PostUpdateRequest;
 import com.spectrum.documentationtest.InitIntegrationDocsTest;
@@ -16,7 +16,8 @@ import com.spectrum.domain.user.Authority;
 import com.spectrum.domain.user.User;
 import com.spectrum.repository.post.PostRepository;
 import com.spectrum.repository.user.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,23 +39,31 @@ public class PostControllerTest extends InitIntegrationDocsTest {
 
     Post savePost1;
     Post savePost2;
+    Post savePost3;
     User user;
+    String validToken;
 
-    @BeforeEach
+    @BeforeAll
     void init() {
-        savePost1 = postRepository.save(new Post("title1", "content1", 1L));
-        savePost2 = postRepository.save(new Post("title2", "content2", 1L));
         user = userRepository.save(
             new User(1L, "123456789", "username", "email", "imageUrl", Authority.GUEST)
         );
+        savePost1 = postRepository.save(new Post("title1", "content1", user.getId()));
+        savePost2 = postRepository.save(new Post("title2", "content2", user.getId()));
+        savePost3 = postRepository.save(new Post("title3", "content3", user.getId()));
+        validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
+    }
+
+    @AfterEach
+    void teardown() {
+        postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     @DisplayName("게시글 생성 요청이 정상적인 경우라면 게시글 생성 성공")
     void create_post_success() {
         PostCreateRequest request = new PostCreateRequest("title", "content");
-
-        String validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
 
         given(this.spec)
             .filter(
@@ -77,11 +86,9 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     }
 
     @Test
-    @DisplayName("게시글 수정 요청이 정상적인 경우라면 게시글 변경 성공")
+    @DisplayName("게시글 수정 요청이 정상적인 경우라면 게시글 수정 성공")
     void update_post_success() {
-        PostUpdateRequest request = new PostUpdateRequest("title", "content");
-
-        String validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
+        PostUpdateRequest request = new PostUpdateRequest("update title", "update content");
 
         given(this.spec)
             .filter(
@@ -96,16 +103,17 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
             .header("Authorization", "Bearer " + validToken)
             .body(request)
-        .when()
+
+            .when()
             .put("/api/posts/{postId}", savePost2.getId())
-        .then()
+
+            .then()
             .statusCode(HttpStatus.OK.value());
     }
 
     @Test
     @DisplayName("게시글 삭제 요청이 정상적인 경우라면 게시글 삭제 성공")
     void delete_post_success() {
-        String validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
 
         given(this.spec)
             .filter(
@@ -116,9 +124,11 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
             .header("Authorization", "Bearer " + validToken)
-        .when()
-            .delete("/api/posts/{postId}", savePost1.getId())
-        .then()
+
+            .when()
+            .delete("/api/posts/{postId}", savePost3.getId())
+
+            .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
@@ -133,9 +143,11 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             )
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
-        .when()
-            .get("/api/posts/{postId}", savePost2.getId())
-        .then()
+
+            .when()
+            .get("/api/posts/{postId}", savePost3.getId())
+
+            .then()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE);
     }
@@ -145,16 +157,16 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     void findAll_post_success() {
         given(this.spec)
             .filter(
-                document("post-findAll"
-                )
+                document("post-findAll")
             )
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
-        .when()
+
+            .when()
             .get("/api/posts")
-        .then()
+
+            .then()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE);
     }
-
 }

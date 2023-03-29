@@ -21,11 +21,13 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-@TestInstance(Lifecycle.PER_CLASS)
 @ExtendWith(RestDocumentationExtension.class)
 @ActiveProfiles("test")
+@Transactional
+@TestInstance(Lifecycle.PER_CLASS)
 public class InitIntegrationDocsTest {
 
     @Autowired

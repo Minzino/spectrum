@@ -1,6 +1,6 @@
 package com.spectrum.common.exception;
 
-import com.spectrum.common.dto.ErrorResponse;
+import com.spectrum.common.exception.dto.ErrorResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +52,20 @@ public class GlobalExceptionHandler {
             ErrorCodeAndMessage.INVALID_REQUEST.getCode()
             , ErrorCodeAndMessage.INVALID_REQUEST.getMessage()
             , errors);
+
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(errorResponse);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
+        IllegalArgumentException ex) {
+        log.info("Error: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(
+            ErrorCodeAndMessage.INVALID_REQUEST.getCode(),
+            ex.getMessage());
 
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)

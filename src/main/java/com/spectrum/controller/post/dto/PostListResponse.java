@@ -1,6 +1,6 @@
 package com.spectrum.controller.post.dto;
 
-import com.spectrum.service.dto.PostDto;
+import com.spectrum.service.post.dto.PostDto;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
