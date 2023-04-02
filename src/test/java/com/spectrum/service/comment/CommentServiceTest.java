@@ -65,13 +65,13 @@ class CommentServiceTest {
             new User(USER2_ID, "3456789", "username2", "email2", "imageUrl2", Authority.GUEST)
         );
         post = postRepository.save(
-            new Post("제목", "게시글", USER1_ID)
+            new Post("제목", "게시글", user1.getId())
         );
         comment = commentRepository.save(
-            new Comment(USER1_ID, post.getId(), "댓글입니다.")
+            new Comment(user1.getId(), post.getId(), "댓글입니다.")
         );
         recomment = commentRepository.save(
-            new Comment(USER1_ID, post.getId(), comment.getId(), "대댓글입니다.")
+            new Comment(user1.getId(), post.getId(), comment.getId(), "대댓글입니다.")
         );
     }
 
@@ -107,7 +107,7 @@ class CommentServiceTest {
         CommentUpdateDto request = new CommentUpdateDto("수정된 댓글입니다.");
 
         // when
-        CommentUpdateResponse response = commentService.update(USER1_ID, post.getId(),
+        CommentUpdateResponse response = commentService.update(user1.getId(), post.getId(),
             comment.getId(), request);
 
         //then
