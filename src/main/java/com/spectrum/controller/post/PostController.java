@@ -7,6 +7,7 @@ import com.spectrum.controller.post.dto.PostDetailResponse;
 import com.spectrum.controller.post.dto.PostListResponse;
 import com.spectrum.controller.post.dto.PostUpdateRequest;
 import com.spectrum.service.post.PostService;
+import io.micrometer.core.annotation.Timed;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -60,6 +61,7 @@ public class PostController {
     }
 
     @GetMapping
+    @Timed(value = "posts.getAll", longTask = true)
     public ResponseEntity<PostListResponse> getAllPosts() {
 
         PostListResponse postListResponse = postService.findAll();
@@ -67,6 +69,7 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
+    @Timed(value = "posts.get", longTask = true)
     public ResponseEntity<PostDetailResponse> getPost(
         @PathVariable("postId") Long postId) {
 
