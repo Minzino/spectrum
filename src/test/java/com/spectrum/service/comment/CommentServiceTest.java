@@ -14,28 +14,21 @@ import com.spectrum.domain.user.User;
 import com.spectrum.exception.comment.NotParentException;
 import com.spectrum.exception.post.NotAuthorException;
 import com.spectrum.exception.user.UserNotFoundException;
-import com.spectrum.repository.comment.CommentRepository;
-import com.spectrum.repository.post.PostRepository;
-import com.spectrum.repository.user.UserRepository;
 import com.spectrum.service.comment.dto.CommentCreateDto;
 import com.spectrum.service.comment.dto.CommentUpdateDto;
 import com.spectrum.service.comment.dto.RepliesCreateDto;
+import com.spectrum.setup.IntegerationTest;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 
 @DisplayName("댓글 서비스 테스트")
-@ActiveProfiles("test")
-@SpringBootTest
-class CommentServiceTest {
+class CommentServiceTest extends IntegerationTest {
 
     private static final Long USER1_ID = 1L;
     private static final Long USER2_ID = 2L;
@@ -43,12 +36,6 @@ class CommentServiceTest {
 
     @Autowired
     CommentService commentService;
-    @Autowired
-    CommentRepository commentRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    PostRepository postRepository;
 
     User user1;
     User user2;
@@ -65,20 +52,14 @@ class CommentServiceTest {
             new User(USER2_ID, "3456789", "username2", "email2", "imageUrl2", Authority.GUEST)
         );
         post = postRepository.save(
-            new Post("제목", "게시글", user1.getId())
+            new Post("제목", "게시글", USER1_ID)
         );
         comment = commentRepository.save(
-            new Comment(user1.getId(), post.getId(), "댓글입니다.")
+            new Comment(USER1_ID, post.getId(), "댓글입니다.")
         );
         recomment = commentRepository.save(
-            new Comment(user1.getId(), post.getId(), comment.getId(), "대댓글입니다.")
+            new Comment(USER1_ID, post.getId(), comment.getId(), "대댓글입니다.")
         );
-    }
-
-    @AfterEach
-    void teardown() {
-        commentRepository.deleteAll();
-        postRepository.deleteAll();
     }
 
     @Test
@@ -88,12 +69,12 @@ class CommentServiceTest {
         CommentCreateDto request = new CommentCreateDto("댓글입니다.");
 
         // when
-        CommentCreateResponse response = commentService.save(user1.getId(), post.getId(), request);
+        CommentCreateResponse response = commentService.save(USER1_ID, post.getId(), request);
 
         // then
         SoftAssertions.assertSoftly(
             softly -> {
-                softly.assertThat(response.getUserId()).isEqualTo(user1.getId());
+                softly.assertThat(response.getUserId()).isEqualTo(USER1_ID);
                 softly.assertThat(response.getPostId()).isEqualTo(post.getId());
                 softly.assertThat(response.getContent()).isEqualTo("댓글입니다.");
             }
@@ -107,7 +88,7 @@ class CommentServiceTest {
         CommentUpdateDto request = new CommentUpdateDto("수정된 댓글입니다.");
 
         // when
-        CommentUpdateResponse response = commentService.update(user1.getId(), post.getId(),
+        CommentUpdateResponse response = commentService.update(USER1_ID, post.getId(),
             comment.getId(), request);
 
         //then
@@ -115,7 +96,7 @@ class CommentServiceTest {
             softly -> {
                 softly.assertThat(response.getCommentId()).isEqualTo(comment.getId());
                 softly.assertThat(response.getContent()).isEqualTo("수정된 댓글입니다.");
-                softly.assertThat(response.getUserId()).isEqualTo(user1.getId());
+                softly.assertThat(response.getUserId()).isEqualTo(USER1_ID);
                 softly.assertThat(response.getPostId()).isEqualTo(post.getId());
             }
         );
@@ -149,14 +130,14 @@ class CommentServiceTest {
         RepliesCreateDto request = new RepliesCreateDto("대댓글 입니다.");
 
         // when
-        RepliesCreateResponse response = commentService.saveReplies(user1.getId(), comment.getId(),
+        RepliesCreateResponse response = commentService.saveReplies(USER1_ID, comment.getId(),
             request);
 
         // then
         SoftAssertions.assertSoftly(
             softly -> {
                 softly.assertThat(response.getParentId()).isEqualTo(comment.getId());
-                softly.assertThat(response.getUserId()).isEqualTo(user1.getId());
+                softly.assertThat(response.getUserId()).isEqualTo(USER1_ID);
                 softly.assertThat(response.getContent()).isEqualTo("대댓글 입니다.");
             }
         );
@@ -225,7 +206,7 @@ class CommentServiceTest {
 
         // when & then
         assertThatThrownBy(
-            () -> commentService.saveReplies(user1.getId(), recomment.getId(), request)
+            () -> commentService.saveReplies(USER1_ID, recomment.getId(), request)
         ).isInstanceOf(NotParentException.class);
     }
 }

@@ -14,7 +14,7 @@ import com.spectrum.domain.user.User;
 import com.spectrum.repository.comment.CommentRepository;
 import com.spectrum.repository.post.PostRepository;
 import com.spectrum.repository.user.UserRepository;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,9 @@ import org.springframework.restdocs.payload.JsonFieldType;
 
 class CommentLikeControllerTest extends InitIntegrationDocsTest {
 
+    private final static Long USER_ID = 1L;
+    private final static Long POST_ID = 1L;
+    private final static Long COMMENT_ID = 1L;
     @Autowired
     PostRepository postRepository;
     @Autowired
@@ -39,15 +42,15 @@ class CommentLikeControllerTest extends InitIntegrationDocsTest {
     User user;
     Comment comment;
 
-    @BeforeAll
+    @BeforeEach
     void init() {
         user = userRepository.save(
             new User(1L, "12345678", "username", "email", "imageUrl", Authority.GUEST)
         );
         comment = commentRepository.save(
-            new Comment(user.getId(), 1L, "댓글입니다.")
+            new Comment(USER_ID, POST_ID, "댓글입니다.")
         );
-        validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
+        validToken = jwtProvider.createAccessToken(String.valueOf(USER_ID));
     }
 
     @Test
@@ -70,7 +73,7 @@ class CommentLikeControllerTest extends InitIntegrationDocsTest {
             .header("Authorization", "Bearer " + validToken)
 
             .when()
-            .post("/api/comments/{commentId}/likes", comment.getId())
+            .post("/api/comments/{commentId}/likes", COMMENT_ID)
 
             .then()
             .statusCode(HttpStatus.CREATED.value());

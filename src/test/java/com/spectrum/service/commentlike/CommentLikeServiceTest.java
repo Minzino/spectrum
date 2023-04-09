@@ -8,35 +8,16 @@ import com.spectrum.domain.post.Post;
 import com.spectrum.domain.user.Authority;
 import com.spectrum.domain.user.User;
 import com.spectrum.exception.user.UserNotFoundException;
-import com.spectrum.repository.comment.CommentRepository;
-import com.spectrum.repository.commentlike.CommentLikeRepository;
-import com.spectrum.repository.post.PostRepository;
-import com.spectrum.repository.user.UserRepository;
 import com.spectrum.service.commentlike.dto.CommentLikeDto;
+import com.spectrum.setup.IntegerationTest;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
-@ActiveProfiles("test")
 @DisplayName("댓글 좋아요 서비스 테스트")
-class CommentLikeServiceTest {
-
-
-    @Autowired
-    CommentRepository commentRepository;
-    @Autowired
-    PostRepository postRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    CommentLikeRepository commentLikeRepository;
-
+class CommentLikeServiceTest extends IntegerationTest {
     @Autowired
     CommentLikeService commentLikeService;
 
@@ -59,13 +40,6 @@ class CommentLikeServiceTest {
         replies = commentRepository.save(
             new Comment(user.getId(), post.getId(), comment.getId(), "대댓글입니다.")
         );
-    }
-
-    @AfterEach
-    void teardown() {
-        userRepository.deleteAll();
-        postRepository.deleteAll();
-        commentLikeRepository.deleteAll();
     }
 
     @Test
