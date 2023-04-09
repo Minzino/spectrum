@@ -9,7 +9,7 @@
 <summary>프로젝트 인프라 구성도</summary>
 <div markdown="1">
 
-![](https://meenzino.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F85387fcd-4cea-47e9-bfa6-661795c5f727%2FDraw.jpeg?table=block&id=bd624f0d-863e-44d4-9f8b-4060c945aa8b&spaceId=9d32437f-ad77-480c-94b0-229d3642279b&width=2000&userId=&cache=v2)
+![](https://meenzino.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F932f1e91-a050-42b4-afd8-975c22e704d6%2Faws-instance-architecture.png?id=aece661e-97a7-4dad-bb9b-58341aac931a&table=block&spaceId=9d32437f-ad77-480c-94b0-229d3642279b&width=2000&userId=&cache=v2)
 </div>
 </details>
 
@@ -63,8 +63,8 @@ Grafana: http://localhost:3000
 Grafana에 로그인하고 대시보드를 설정합니다.
 
 1. 기본 사용자 이름과 암호로 로그인합니다. (기본값: admin / admin)
-2. 메뉴에서 Configuratino -> Data Sources로 들어갑니다.
-3. Add new data source 버튼을 클릭 
+2. 메뉴에서 Configuration -> Data Sources로 들어갑니다.
+3. Add new data source 버튼을 클릭
 4. Prometheus 데이터 소스를 추가합니다. URL로 http://prometheus:9090를 사용합니다.
 5. 새 대시보드를 만들거나 기존 대시보드를 가져와서 데이터를 시각화합니다.<br>
 6. 대시보드는 Dashboards -> Import에 Import via grafana.com에 `6756`id값을 적어줍니다.
