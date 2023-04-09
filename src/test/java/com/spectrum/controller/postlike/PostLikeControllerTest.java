@@ -13,7 +13,7 @@ import com.spectrum.domain.user.Authority;
 import com.spectrum.domain.user.User;
 import com.spectrum.repository.post.PostRepository;
 import com.spectrum.repository.user.UserRepository;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ class PostLikeControllerTest extends InitIntegrationDocsTest {
     Post post;
     String validToken;
 
-    @BeforeAll
+    @BeforeEach
     void init() {
         user = userRepository.save(
             new User(1L, "12345678", "username", "email", "imageUrl", Authority.GUEST)

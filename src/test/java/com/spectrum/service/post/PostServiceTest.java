@@ -13,39 +13,32 @@ import com.spectrum.domain.user.User;
 import com.spectrum.exception.post.NotAuthorException;
 import com.spectrum.exception.post.PostNotFoundException;
 import com.spectrum.exception.user.UserNotFoundException;
-import com.spectrum.repository.post.PostRepository;
-import com.spectrum.repository.user.UserRepository;
 import com.spectrum.service.post.dto.PostCreateDto;
 import com.spectrum.service.post.dto.PostUpdateDto;
+import com.spectrum.setup.IntegerationTest;
 import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 @DisplayName("게시글 서비스 테스트")
-@SpringBootTest
-@ActiveProfiles("test")
-class PostServiceTest {
+class PostServiceTest extends IntegerationTest {
+
+    private static final Long FAKE_ID = -1L;
+    private static final Long USER1_ID = 1L;
+    private static final Long USER2_ID = 2L;
+    private static final Long POST_ID = 1L;
 
     @Autowired
     PostService postService;
-
-    @Autowired
-    PostRepository postRepository;
-    @Autowired
-    UserRepository userRepository;
 
     Post savePost1;
     Post savePost2;
     Post savePost3;
     User user1;
     User user2;
-    private static final Long FAKE_ID = -1L;
 
     @BeforeEach
     void init() {
@@ -55,15 +48,9 @@ class PostServiceTest {
         user2 = userRepository.save(
             new User(2L, "45678", "username2", "email2", "imageUrl2", Authority.GUEST)
         );
-        savePost1 = postRepository.save(new Post("title", "content", user1.getId()));
-        savePost2 = postRepository.save(new Post("title", "content", user2.getId()));
-        savePost3 = postRepository.save(new Post("title", "content", user1.getId()));
-    }
-
-    @AfterEach
-    void teardown() {
-        postRepository.deleteAll();
-        userRepository.deleteAll();
+        savePost1 = postRepository.save(new Post("title", "content", USER1_ID));
+        savePost2 = postRepository.save(new Post("title", "content", USER2_ID));
+        savePost3 = postRepository.save(new Post("title", "content", USER1_ID));
     }
 
     @DisplayName("정상적인 게시글 생성 요청이 들어온다면 게시글 생성 성공")
@@ -76,7 +63,7 @@ class PostServiceTest {
         PostCreateDto postCreateDto = new PostCreateDto(title, content);
 
         // when
-        PostCreateResponse response = postService.save(user1.getId(), postCreateDto);
+        PostCreateResponse response = postService.save(USER1_ID, postCreateDto);
 
         // then
         SoftAssertions.assertSoftly(softly -> {
@@ -95,7 +82,7 @@ class PostServiceTest {
         PostUpdateDto postUpdateDto = new PostUpdateDto(updateContent, updateTitle);
 
         // when
-        PostUpdateResponse response = postService.update(user1.getId(), savePost1.getId(),
+        PostUpdateResponse response = postService.update(USER1_ID, POST_ID,
             postUpdateDto);
 
         // then
@@ -116,7 +103,7 @@ class PostServiceTest {
 
         // when & then
         assertThatThrownBy(
-            () -> postService.update(user1.getId(), FAKE_ID, postUpdateDto))
+            () -> postService.update(USER1_ID, FAKE_ID, postUpdateDto))
             .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -127,7 +114,7 @@ class PostServiceTest {
         Long savePostId = savePost1.getId();
 
         // when
-        postService.delete(user1.getId(), savePostId);
+        postService.delete(USER1_ID, savePostId);
         Optional<Post> deletePost = postRepository.findById(savePostId);
 
         // then
@@ -139,7 +126,7 @@ class PostServiceTest {
     void delete_post_failure() {
         // when & then
         assertThatThrownBy(
-            () -> postService.delete(user1.getId(), FAKE_ID))
+            () -> postService.delete(USER1_ID, FAKE_ID))
             .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -202,7 +189,7 @@ class PostServiceTest {
         PostUpdateDto postUpdateDto = new PostUpdateDto(updateContent, updateTitle);
         // when & then
         assertThatThrownBy(
-            () -> postService.update(FAKE_ID, savePost1.getId(), postUpdateDto))
+            () -> postService.update(FAKE_ID, POST_ID, postUpdateDto))
             .isInstanceOf(UserNotFoundException.class);
     }
 
@@ -211,7 +198,7 @@ class PostServiceTest {
     void delete_post_not_user_failure() {
         // when & then
         assertThatThrownBy(
-            () -> postService.delete(FAKE_ID, savePost1.getId()))
+            () -> postService.delete(FAKE_ID, POST_ID))
             .isInstanceOf(UserNotFoundException.class);
     }
 
@@ -220,7 +207,7 @@ class PostServiceTest {
     void delete_post_not_author_failure() {
         // when & then
         assertThatThrownBy(
-            () -> postService.delete(savePost2.getUserId(), savePost3.getId()))
+            () -> postService.delete(USER2_ID, POST_ID))
             .isInstanceOf(NotAuthorException.class);
     }
 
@@ -234,7 +221,7 @@ class PostServiceTest {
         PostUpdateDto postUpdateDto = new PostUpdateDto(updateContent, updateTitle);
         // when & then
         assertThatThrownBy(
-            () -> postService.update(savePost2.getUserId(), savePost3.getId(), postUpdateDto))
+            () -> postService.update(USER2_ID, POST_ID, postUpdateDto))
             .isInstanceOf(NotAuthorException.class);
     }
 }

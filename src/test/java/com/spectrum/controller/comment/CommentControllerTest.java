@@ -18,8 +18,7 @@ import com.spectrum.domain.user.User;
 import com.spectrum.repository.comment.CommentRepository;
 import com.spectrum.repository.post.PostRepository;
 import com.spectrum.repository.user.UserRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,10 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 public class CommentControllerTest extends InitIntegrationDocsTest {
+
+    private static final Long USER_ID = 1L;
+    private static final Long POST_ID = 1L;
+    private static final Long COMMENT_ID = 1L;
 
     @Autowired
     PostRepository postRepository;
@@ -50,40 +53,33 @@ public class CommentControllerTest extends InitIntegrationDocsTest {
     Comment replies3;
     String validToken;
 
-    @BeforeAll
+    @BeforeEach
     void init() {
         user = userRepository.save(
-            new User(1L, "123456789", "username", "email", "imageUrl", Authority.GUEST)
+            new User(USER_ID, "123456789", "username", "email", "imageUrl", Authority.GUEST)
         );
         post = postRepository.save(
-            new Post("제목", "게시글", user.getId())
+            new Post("제목", "게시글", USER_ID)
         );
         comment1 = commentRepository.save(
-            new Comment(user.getId(), post.getId(), "content")
+            new Comment(USER_ID, POST_ID, "content")
         );
         comment2 = commentRepository.save(
-            new Comment(user.getId(), post.getId(), "content")
+            new Comment(USER_ID, POST_ID, "content")
         );
         comment3 = commentRepository.save(
-            new Comment(user.getId(), post.getId(), "content")
+            new Comment(USER_ID, POST_ID, "content")
         );
         replies1 = commentRepository.save(
-            new Comment(user.getId(), post.getId(), comment2.getId(), "re-content")
+            new Comment(USER_ID, POST_ID, COMMENT_ID, "re-content")
         );
         replies2 = commentRepository.save(
-            new Comment(user.getId(), post.getId(), comment2.getId(), "re-content")
+            new Comment(USER_ID, POST_ID, COMMENT_ID, "re-content")
         );
         replies3 = commentRepository.save(
-            new Comment(user.getId(), post.getId(), comment2.getId(), "re-content")
+            new Comment(USER_ID, POST_ID, COMMENT_ID, "re-content")
         );
-        validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
-    }
-
-    @AfterEach
-    void teardown() {
-        commentRepository.deleteAll();
-        postRepository.deleteAll();
-        userRepository.deleteAll();
+        validToken = jwtProvider.createAccessToken(String.valueOf(USER_ID));
     }
 
     @Test
@@ -105,7 +101,7 @@ public class CommentControllerTest extends InitIntegrationDocsTest {
             .header("Authorization", "Bearer " + validToken)
 
             .when()
-            .post("/api/posts/{postId}/comments", post.getId())
+            .post("/api/posts/{postId}/comments", POST_ID)
 
             .then()
             .statusCode(HttpStatus.CREATED.value());
@@ -130,7 +126,7 @@ public class CommentControllerTest extends InitIntegrationDocsTest {
             .body(request)
 
             .when()
-            .put("/api/posts/{postId}/comments/{commentId}", post.getId(), comment2.getId())
+            .put("/api/posts/{postId}/comments/{commentId}", POST_ID, COMMENT_ID)
 
             .then()
             .statusCode(HttpStatus.OK.value());
@@ -151,7 +147,7 @@ public class CommentControllerTest extends InitIntegrationDocsTest {
             .header("Authorization", "Bearer " + validToken)
 
             .when()
-            .delete("/api/comments/{commentId}", comment1.getId())
+            .delete("/api/comments/{commentId}", COMMENT_ID)
 
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
@@ -168,7 +164,7 @@ public class CommentControllerTest extends InitIntegrationDocsTest {
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
 
             .when()
-            .get("/api/posts/{postId}/comments", post.getId())
+            .get("/api/posts/{postId}/comments", POST_ID)
 
             .then()
             .statusCode(HttpStatus.OK.value())
@@ -194,7 +190,7 @@ public class CommentControllerTest extends InitIntegrationDocsTest {
             .header("Authorization", "Bearer " + validToken)
 
             .when()
-            .post("/api/comments/{commentId}/replies", comment2.getId())
+            .post("/api/comments/{commentId}/replies", COMMENT_ID)
 
             .then()
             .statusCode(HttpStatus.CREATED.value());
@@ -211,7 +207,7 @@ public class CommentControllerTest extends InitIntegrationDocsTest {
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
 
             .when()
-            .get("/api/comments/{commentId}/replies", comment2.getId())
+            .get("/api/comments/{commentId}/replies", COMMENT_ID)
 
             .then()
             .statusCode(HttpStatus.OK.value())

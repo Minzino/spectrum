@@ -16,8 +16,7 @@ import com.spectrum.domain.user.Authority;
 import com.spectrum.domain.user.User;
 import com.spectrum.repository.post.PostRepository;
 import com.spectrum.repository.user.UserRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,8 @@ import org.springframework.restdocs.payload.JsonFieldType;
 
 public class PostControllerTest extends InitIntegrationDocsTest {
 
+    private final static Long USER_ID = 1L;
+    private final static Long POST_ID = 1L;
     @Autowired
     PostRepository postRepository;
 
@@ -43,21 +44,15 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     User user;
     String validToken;
 
-    @BeforeAll
+    @BeforeEach
     void init() {
         user = userRepository.save(
             new User(1L, "123456789", "username", "email", "imageUrl", Authority.GUEST)
         );
-        savePost1 = postRepository.save(new Post("title1", "content1", user.getId()));
-        savePost2 = postRepository.save(new Post("title2", "content2", user.getId()));
-        savePost3 = postRepository.save(new Post("title3", "content3", user.getId()));
-        validToken = jwtProvider.createAccessToken(String.valueOf(user.getId()));
-    }
-
-    @AfterEach
-    void teardown() {
-        postRepository.deleteAll();
-        userRepository.deleteAll();
+        savePost1 = postRepository.save(new Post("title1", "content1", USER_ID));
+        savePost2 = postRepository.save(new Post("title2", "content2", USER_ID));
+        savePost3 = postRepository.save(new Post("title3", "content3", USER_ID));
+        validToken = jwtProvider.createAccessToken(String.valueOf(USER_ID));
     }
 
     @Test
@@ -105,7 +100,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .body(request)
 
             .when()
-            .put("/api/posts/{postId}", savePost2.getId())
+            .put("/api/posts/{postId}", POST_ID)
 
             .then()
             .statusCode(HttpStatus.OK.value());
@@ -126,7 +121,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .header("Authorization", "Bearer " + validToken)
 
             .when()
-            .delete("/api/posts/{postId}", savePost3.getId())
+            .delete("/api/posts/{postId}", POST_ID)
 
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
@@ -145,7 +140,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
 
             .when()
-            .get("/api/posts/{postId}", savePost3.getId())
+            .get("/api/posts/{postId}", savePost1.getId())
 
             .then()
             .statusCode(HttpStatus.OK.value())
