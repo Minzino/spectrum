@@ -14,6 +14,8 @@ import com.spectrum.service.post.dto.PostUpdateDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,9 +56,9 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public PostListResponse findAll() {
+    public PostListResponse findByPage(Pageable pageable) {
 
-        List<Post> postList = postRepository.findAll();
+        Page<Post> postList = postRepository.findAll(pageable);
         List<PostDto> postsDto = postList.stream()
             .map(post -> new PostDto(post.getId(), post.getTitle(), post.getContent()))
             .collect(Collectors.toUnmodifiableList());

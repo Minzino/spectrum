@@ -9,6 +9,8 @@ import com.spectrum.controller.post.dto.PostUpdateRequest;
 import com.spectrum.service.post.PostService;
 import java.net.URI;
 import javax.validation.Valid;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -60,9 +63,12 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<PostListResponse> getAllPosts() {
+    public ResponseEntity<PostListResponse> getPostsByPage(
+        @RequestParam(defaultValue = "0") int page
+        , @RequestParam(defaultValue = "10") int size) {
 
-        PostListResponse postListResponse = postService.findAll();
+        Pageable pageable = PageRequest.of(page,size);
+        PostListResponse postListResponse = postService.findByPage(pageable);
         return ResponseEntity.ok().body(postListResponse);
     }
 

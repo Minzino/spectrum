@@ -22,6 +22,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DisplayName("게시글 서비스 테스트")
 class PostServiceTest extends IntegerationTest {
@@ -158,8 +160,10 @@ class PostServiceTest extends IntegerationTest {
     @DisplayName("정상적인 게시글 전체 조회시 전체 조회 성공")
     @Test
     void get_all_post_success() {
-        // given & when
-        PostListResponse postList = postService.findAll();
+        // given
+        Pageable pageable = PageRequest.of(0,10);
+        // when
+        PostListResponse postList = postService.findByPage(pageable);
         // then
         assertThat(postList.getPosts().size()).isEqualTo(3);
     }
