@@ -59,9 +59,12 @@ class TestRunner {
         grinder.logger.info("before. init headers and cookies")
     }
 
+    int page = 0
+
     @Test
     public void test() {
-        HTTPResponse response = request.GET("http://127.0.0.1:8080/api/posts", params)
+        HTTPResponse response = request.GET("http://127.0.0.1:8080/api/posts?page=${page}&size=10", params)
+        page++
 
         if (response.statusCode == 301 || response.statusCode == 302) {
             grinder.logger.warn("Warning. The response may not be correct. The response code was {}.", response.statusCode)
