@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import lombok.AccessLevel;
@@ -17,7 +18,7 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
-@Table(name = "posts")
+@Table(name = "posts", indexes = {@Index(name = "idx_title", columnList = "title")})
 @SQLDelete(sql = "update posts set deleted_at = now() where post_id = ?")
 @Where(clause = "deleted_at is null")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
