@@ -5,6 +5,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.spectrum.common.auth.provider.JwtProvider;
@@ -149,13 +150,22 @@ public class PostControllerTest extends InitIntegrationDocsTest {
 
     @Test
     @DisplayName("게시글 전체 조회 요청이 정상적인 경우 게시글 전체 조회 성공")
-    void findAll_post_success() {
+    void find_by_page_post_success() {
+        int pageNumber = 1;
+        int pageSize = 10;
         given(this.spec)
             .filter(
-                document("post-findAll")
+                document("post-by-page",
+                    requestParameters(
+                        parameterWithName("page").description("페이지 번호 (1부터 시작)"),
+                        parameterWithName("size").description("페이지 크기")
+                    )
+                )
             )
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+            .queryParam("page", pageNumber)
+            .queryParam("size", pageSize)
 
             .when()
             .get("/api/posts")

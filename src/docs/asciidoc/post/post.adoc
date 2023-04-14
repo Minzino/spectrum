@@ -45,7 +45,7 @@ include::{snippets}/post-find/http-response.adoc[]
 API: `GET /api/posts`
 
 ==== Request
-include::{snippets}/post-findAll/http-request.adoc[]
+include::{snippets}/post-by-page/http-request.adoc[]
 
 ==== Response
-include::{snippets}/post-findAll/http-response.adoc[]
+include::{snippets}/post-by-page/http-response.adoc[]
