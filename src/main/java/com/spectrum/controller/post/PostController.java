@@ -67,7 +67,7 @@ public class PostController {
         @RequestParam(defaultValue = "0") int page
         , @RequestParam(defaultValue = "10") int size) {
 
-        Pageable pageable = PageRequest.of(page,size);
+        Pageable pageable = PageRequest.of(page - 1, size);
         PostListResponse postListResponse = postService.findByPage(pageable);
         return ResponseEntity.ok().body(postListResponse);
     }
