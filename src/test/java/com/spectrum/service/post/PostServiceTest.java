@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
-import com.spectrum.controller.post.dto.PostListResponse;
+import com.spectrum.controller.post.dto.PostPageResponse;
 import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
 import com.spectrum.domain.user.Authority;
@@ -157,15 +157,20 @@ class PostServiceTest extends IntegerationTest {
             .isInstanceOf(PostNotFoundException.class);
     }
 
-    @DisplayName("정상적인 게시글 전체 조회시 전체 조회 성공")
+    @DisplayName("정상적인 게시글 페이지 조회시 페이지 조회 성공")
     @Test
     void get_all_post_success() {
         // given
-        Pageable pageable = PageRequest.of(0,10);
+        Pageable pageable = PageRequest.of(0, 10);
         // when
-        PostListResponse postList = postService.findByPage(pageable);
+        PostPageResponse page = postService.findByPage(pageable);
         // then
-        assertThat(postList.getPosts().size()).isEqualTo(3);
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(page.getPosts().size()).isEqualTo(3);
+            softly.assertThat(page.getCurrentPage()).isEqualTo(1);
+            softly.assertThat(page.getTotalPages()).isEqualTo(1);
+            softly.assertThat(page.getTotalElements()).isEqualTo(3);
+        });
     }
 
     @DisplayName("존재하지 않는 회원이 게시글 생성 요청 시 예외 발생")
