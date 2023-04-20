@@ -3,7 +3,7 @@ package com.spectrum.service.post;
 import com.spectrum.common.aop.UserValidation;
 import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
-import com.spectrum.controller.post.dto.PostListResponse;
+import com.spectrum.controller.post.dto.PostPageResponse;
 import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
 import com.spectrum.exception.post.PostNotFoundException;
@@ -56,13 +56,18 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public PostListResponse findByPage(Pageable pageable) {
+    public PostPageResponse findByPage(Pageable pageable) {
 
         Page<Post> postList = postRepository.findAll(pageable);
         List<PostDto> postsDto = postList.stream()
             .map(post -> new PostDto(post.getId(), post.getTitle(), post.getContent()))
             .collect(Collectors.toUnmodifiableList());
-        return new PostListResponse(postsDto);
+        return new PostPageResponse(
+            postsDto
+            , postList.getTotalPages()
+            , postList.getTotalElements()
+            , postList.getNumber() + 1
+        );
     }
 
     public PostDetailResponse findPostById(Long postId) {
