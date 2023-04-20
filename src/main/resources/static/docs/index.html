@@ -454,7 +454,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_게시글_수정">1.2. 게시글 수정</a></li>
 <li><a href="#_게시글_삭제">1.3. 게시글 삭제</a></li>
 <li><a href="#_게시글_단건_조회">1.4. 게시글 단건 조회</a></li>
-<li><a href="#_게시글_전체_조회">1.5. 게시글 전체 조회</a></li>
+<li><a href="#_게시글_페이지_조회">1.5. 게시글 페이지 조회</a></li>
 </ul>
 </li>
 <li><a href="#_댓글_crud_api">2. 댓글 CRUD API</a>
@@ -494,9 +494,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/posts HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxNDg1OTc2LCJleHAiOjE2ODE0ODY1NzZ9.XolyxgJSNnvV7R4KgVpSuoZJqHwCeMJXtIpAnZ2OERA
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxOTk5MzQxLCJleHAiOjE2ODE5OTk5NDF9.-3we8ctkxIev8b85gWbJHjdnkCUu8iRIWUF_23wxCeI
 Content-Type: application/json
-Host: localhost:60894
+Host: localhost:50686
 Content-Length: 48
 
 {
@@ -512,7 +512,7 @@ Content-Length: 48
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
 Location: /api/posts/4
-Date: Fri, 14 Apr 2023 15:26:15 GMT
+Date: Thu, 20 Apr 2023 14:02:21 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
@@ -530,9 +530,9 @@ Connection: keep-alive</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /api/posts/1 HTTP/1.1
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxNDg1OTc2LCJleHAiOjE2ODE0ODY1NzZ9.XolyxgJSNnvV7R4KgVpSuoZJqHwCeMJXtIpAnZ2OERA
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxOTk5MzQyLCJleHAiOjE2ODE5OTk5NDJ9.cYblF4XZJ3Pz-h0495pGqeWguHhdUPYKbOwe5Mx5OZo
 Content-Type: application/json
-Host: localhost:60894
+Host: localhost:50686
 Content-Length: 62
 
 {
@@ -547,7 +547,7 @@ Content-Length: 62
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Date: Fri, 14 Apr 2023 15:26:16 GMT
+Date: Thu, 20 Apr 2023 14:02:21 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
@@ -565,9 +565,9 @@ Connection: keep-alive</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /api/posts/1 HTTP/1.1
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxNDg1OTc2LCJleHAiOjE2ODE0ODY1NzZ9.XolyxgJSNnvV7R4KgVpSuoZJqHwCeMJXtIpAnZ2OERA
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxOTk5MzQyLCJleHAiOjE2ODE5OTk5NDJ9.cYblF4XZJ3Pz-h0495pGqeWguHhdUPYKbOwe5Mx5OZo
 Content-Type: application/json
-Host: localhost:60894</code></pre>
+Host: localhost:50686</code></pre>
 </div>
 </div>
 </div>
@@ -576,7 +576,7 @@ Host: localhost:60894</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
-Date: Fri, 14 Apr 2023 15:26:16 GMT
+Date: Thu, 20 Apr 2023 14:02:21 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
@@ -595,7 +595,7 @@ Connection: keep-alive</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/posts/1 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:60894</code></pre>
+Host: localhost:50686</code></pre>
 </div>
 </div>
 </div>
@@ -606,7 +606,7 @@ Host: localhost:60894</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 14 Apr 2023 15:26:15 GMT
+Date: Thu, 20 Apr 2023 14:02:21 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 Content-Length: 66
@@ -621,32 +621,57 @@ Content-Length: 66
 </div>
 </div>
 <div class="sect2">
-<h3 id="_게시글_전체_조회"><a class="link" href="#_게시글_전체_조회">1.5. 게시글 전체 조회</a></h3>
+<h3 id="_게시글_페이지_조회"><a class="link" href="#_게시글_페이지_조회">1.5. 게시글 페이지 조회</a></h3>
 <div class="paragraph">
-<p>API: <code>GET /api/posts</code></p>
+<p>API : <code>GET /api/posts?page={page}&amp;size={size}</code></p>
 </div>
 <div class="sect3">
-<h4 id="_request_5"><a class="link" href="#_request_5">1.5.1. Request</a></h4>
+<h4 id="_request_parameters"><a class="link" href="#_request_parameters">1.5.1. Request Parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 번호 (1부터 시작)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_request_5"><a class="link" href="#_request_5">1.5.2. Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/posts?page=1&amp;size=10 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/posts?page=1&amp;page=1&amp;size=10&amp;size=10 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:60894</code></pre>
+Host: localhost:50686</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_response_5"><a class="link" href="#_response_5">1.5.2. Response</a></h4>
+<h4 id="_response_5"><a class="link" href="#_response_5">1.5.3. Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 14 Apr 2023 15:26:16 GMT
+Date: Thu, 20 Apr 2023 14:02:21 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
-Content-Length: 246
+Content-Length: 310
 
 {
   "posts" : [ {
@@ -661,7 +686,10 @@ Content-Length: 246
     "postId" : 3,
     "title" : "title3",
     "content" : "content3"
-  } ]
+  } ],
+  "totalPages" : 1,
+  "totalElements" : 3,
+  "currentPage" : 1
 }</code></pre>
 </div>
 </div>
@@ -684,7 +712,7 @@ Content-Length: 246
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/posts/1/comments HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:60894</code></pre>
+Host: localhost:50686</code></pre>
 </div>
 </div>
 </div>
@@ -695,7 +723,7 @@ Host: localhost:60894</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 14 Apr 2023 15:26:14 GMT
+Date: Thu, 20 Apr 2023 14:02:19 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 Content-Length: 582
@@ -706,22 +734,22 @@ Content-Length: 582
     "userId" : 1,
     "postId" : 1,
     "content" : "content",
-    "createdAt" : "2023-04-15T00:26:14.965831",
-    "modifiedAt" : "2023-04-15T00:26:14.965831"
+    "createdAt" : "2023-04-20T23:02:20.020675",
+    "modifiedAt" : "2023-04-20T23:02:20.020675"
   }, {
     "commentId" : 2,
     "userId" : 1,
     "postId" : 1,
     "content" : "content",
-    "createdAt" : "2023-04-15T00:26:14.974616",
-    "modifiedAt" : "2023-04-15T00:26:14.974616"
+    "createdAt" : "2023-04-20T23:02:20.031286",
+    "modifiedAt" : "2023-04-20T23:02:20.031286"
   }, {
     "commentId" : 3,
     "userId" : 1,
     "postId" : 1,
     "content" : "content",
-    "createdAt" : "2023-04-15T00:26:14.981343",
-    "modifiedAt" : "2023-04-15T00:26:14.981343"
+    "createdAt" : "2023-04-20T23:02:20.041076",
+    "modifiedAt" : "2023-04-20T23:02:20.041076"
   } ]
 }</code></pre>
 </div>
@@ -740,7 +768,7 @@ Content-Length: 582
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/comments/1/replies HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:60894</code></pre>
+Host: localhost:50686</code></pre>
 </div>
 </div>
 </div>
@@ -751,7 +779,7 @@ Host: localhost:60894</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 14 Apr 2023 15:26:15 GMT
+Date: Thu, 20 Apr 2023 14:02:20 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 Content-Length: 654
@@ -763,24 +791,24 @@ Content-Length: 654
     "postId" : 1,
     "parentId" : 1,
     "content" : "re-content",
-    "createdAt" : "2023-04-15T00:26:15.509333",
-    "modifiedAt" : "2023-04-15T00:26:15.509333"
+    "createdAt" : "2023-04-20T23:02:20.930377",
+    "modifiedAt" : "2023-04-20T23:02:20.930377"
   }, {
     "commentId" : 5,
     "userId" : 1,
     "postId" : 1,
     "parentId" : 1,
     "content" : "re-content",
-    "createdAt" : "2023-04-15T00:26:15.516723",
-    "modifiedAt" : "2023-04-15T00:26:15.516723"
+    "createdAt" : "2023-04-20T23:02:20.938481",
+    "modifiedAt" : "2023-04-20T23:02:20.938481"
   }, {
     "commentId" : 6,
     "userId" : 1,
     "postId" : 1,
     "parentId" : 1,
     "content" : "re-content",
-    "createdAt" : "2023-04-15T00:26:15.523943",
-    "modifiedAt" : "2023-04-15T00:26:15.523943"
+    "createdAt" : "2023-04-20T23:02:20.949424",
+    "modifiedAt" : "2023-04-20T23:02:20.949424"
   } ]
 }</code></pre>
 </div>
@@ -797,9 +825,9 @@ Content-Length: 654
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/posts/1/comments HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxNDg1OTc1LCJleHAiOjE2ODE0ODY1NzV9.WViFdP7H4NYFva3t5d3tvVB2ag7N2pV_i8b1wfNbGRg
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxOTk5MzQwLCJleHAiOjE2ODE5OTk5NDB9.IBf1RChnNEAfm9yveXuZObnnmNRX9CaCXYBW6Q4Fa4Y
 Content-Type: application/json
-Host: localhost:60894
+Host: localhost:50686
 Content-Length: 33
 
 {
@@ -814,7 +842,7 @@ Content-Length: 33
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
 Location: /api/posts/1/comments
-Date: Fri, 14 Apr 2023 15:26:14 GMT
+Date: Thu, 20 Apr 2023 14:02:20 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
@@ -831,9 +859,9 @@ Connection: keep-alive</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/comments/1/replies HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxNDg1OTc1LCJleHAiOjE2ODE0ODY1NzV9.WViFdP7H4NYFva3t5d3tvVB2ag7N2pV_i8b1wfNbGRg
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxOTk5MzQxLCJleHAiOjE2ODE5OTk5NDF9.-3we8ctkxIev8b85gWbJHjdnkCUu8iRIWUF_23wxCeI
 Content-Type: application/json
-Host: localhost:60894
+Host: localhost:50686
 Content-Length: 40
 
 {
@@ -848,7 +876,7 @@ Content-Length: 40
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
 Location: /comments/1/replies
-Date: Fri, 14 Apr 2023 15:26:15 GMT
+Date: Thu, 20 Apr 2023 14:02:20 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
@@ -866,9 +894,9 @@ Connection: keep-alive</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /api/posts/1/comments/1 HTTP/1.1
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxNDg1OTc0LCJleHAiOjE2ODE0ODY1NzR9.Ep5cMqdJ0kHSupOy0Yb_iLoaMgi0ATdcRENEZH4N_FA
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxOTk5MzM5LCJleHAiOjE2ODE5OTk5Mzl9.Q5Xz7CGL7SEo_m2PnO1YKJPskciOw85s4tB4gH9pViU
 Content-Type: application/json
-Host: localhost:60894
+Host: localhost:50686
 Content-Length: 46
 
 {
@@ -882,7 +910,7 @@ Content-Length: 46
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Date: Fri, 14 Apr 2023 15:26:14 GMT
+Date: Thu, 20 Apr 2023 14:02:19 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
@@ -900,9 +928,9 @@ Connection: keep-alive</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /api/comments/1 HTTP/1.1
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxNDg1OTc0LCJleHAiOjE2ODE0ODY1NzR9.Ep5cMqdJ0kHSupOy0Yb_iLoaMgi0ATdcRENEZH4N_FA
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxOTk5MzM5LCJleHAiOjE2ODE5OTk5Mzl9.Q5Xz7CGL7SEo_m2PnO1YKJPskciOw85s4tB4gH9pViU
 Content-Type: application/json
-Host: localhost:60894</code></pre>
+Host: localhost:50686</code></pre>
 </div>
 </div>
 </div>
@@ -911,7 +939,7 @@ Host: localhost:60894</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
-Date: Fri, 14 Apr 2023 15:26:14 GMT
+Date: Thu, 20 Apr 2023 14:02:19 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
@@ -933,9 +961,9 @@ Connection: keep-alive</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/posts/1/likes HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxNDg1OTc3LCJleHAiOjE2ODE0ODY1Nzd9.OF9PpVAVowTMI3C6BhhlluZKVj8-gLdfxLv-EL_gCpI
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxOTk5MzQzLCJleHAiOjE2ODE5OTk5NDN9.FJBve7LU9bdPrJ807BjOpT4Q68hnqFxEWxKwBxW3fnE
 Content-Type: application/json
-Host: localhost:60894
+Host: localhost:50686
 Content-Length: 26
 
 {
@@ -952,7 +980,7 @@ Content-Length: 26
 Location: /api/posts/1/likes
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 14 Apr 2023 15:26:16 GMT
+Date: Thu, 20 Apr 2023 14:02:23 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 Content-Length: 77
@@ -982,9 +1010,9 @@ Content-Length: 77
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/comments/1/likes HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxNDg1OTc2LCJleHAiOjE2ODE0ODY1NzZ9.XolyxgJSNnvV7R4KgVpSuoZJqHwCeMJXtIpAnZ2OERA
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgxOTk5MzQxLCJleHAiOjE2ODE5OTk5NDF9.-3we8ctkxIev8b85gWbJHjdnkCUu8iRIWUF_23wxCeI
 Content-Type: application/json
-Host: localhost:60894
+Host: localhost:50686
 Content-Length: 26
 
 {
@@ -1001,7 +1029,7 @@ Content-Length: 26
 Location: /api/comments/1/likes
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 14 Apr 2023 15:26:15 GMT
+Date: Thu, 20 Apr 2023 14:02:20 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive
 Content-Length: 83

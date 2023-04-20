@@ -40,9 +40,18 @@ include::{snippets}/post-find/http-request.adoc[]
 ==== Response
 include::{snippets}/post-find/http-response.adoc[]
 
-=== 게시글 전체 조회
+=== 게시글 페이지 조회
 
-API: `GET /api/posts`
+API : `GET /api/posts?page={page}&size={size}`
+
+==== Request Parameters
+
+[cols="25%,75%",options="header"]
+|===
+|Parameter|Description
+|`page`|페이지 번호 (1부터 시작)
+|`size`|페이지 크기
+|===
 
 ==== Request
 include::{snippets}/post-by-page/http-request.adoc[]
