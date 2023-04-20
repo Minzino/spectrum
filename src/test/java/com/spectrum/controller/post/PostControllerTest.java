@@ -149,7 +149,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     }
 
     @Test
-    @DisplayName("게시글 전체 조회 요청이 정상적인 경우 게시글 전체 조회 성공")
+    @DisplayName("게시글 페이지 조회 요청이 정상적인 경우 게시글 페이지 조회 성공")
     void find_by_page_post_success() {
         int pageNumber = 1;
         int pageSize = 10;
@@ -168,10 +168,30 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .queryParam("size", pageSize)
 
             .when()
-            .get("/api/posts")
+            .get("/api/posts?page={page}&size={size}", pageNumber, pageSize)
 
             .then()
             .statusCode(HttpStatus.OK.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    @Test
+    @DisplayName("게시글 페이지 조회 요청이 잘못된 경우 예외 발생")
+    void find_by_page_post_failure() {
+        int invalidPageNumber = -1;
+        int invalidPageSize = 20;
+
+        given(this.spec)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+            .queryParam("page", invalidPageNumber)
+            .queryParam("size", invalidPageSize)
+
+            .when()
+            .get("/api/posts")
+
+            .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE);
     }
 }
