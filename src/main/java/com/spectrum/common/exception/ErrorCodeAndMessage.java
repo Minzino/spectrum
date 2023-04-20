@@ -14,7 +14,8 @@ public enum ErrorCodeAndMessage {
     NOT_AUTHOR("A403 - Not Author", "작성자가 아닙니다.", HttpStatus.FORBIDDEN),
     COMMENT_NOT_FOUND_EXCEPTION("C404 - Comment Not Found", "댓글을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     NOT_PARENT_EXCEPTION("P400 - This Comment is Not Parent", "해당 댓글에는 대댓글을 작성할 수 없습니다.",
-        HttpStatus.BAD_REQUEST);
+        HttpStatus.BAD_REQUEST),
+    INVALID_PAGE_OR_SIZE("P400 - Invalid Page or Size", "페이지와 사이즈 값이 유효하지 않습니다.", HttpStatus.BAD_REQUEST);
 
     private final String code;
     private final String message;

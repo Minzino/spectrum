@@ -4,8 +4,9 @@ import com.spectrum.common.resolver.CurrentUser;
 import com.spectrum.controller.post.dto.PostCreateRequest;
 import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
-import com.spectrum.controller.post.dto.PostListResponse;
+import com.spectrum.controller.post.dto.PostPageResponse;
 import com.spectrum.controller.post.dto.PostUpdateRequest;
+import com.spectrum.exception.post.InvalidPaginationException;
 import com.spectrum.service.post.PostService;
 import java.net.URI;
 import javax.validation.Valid;
@@ -63,13 +64,17 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<PostListResponse> getPostsByPage(
-        @RequestParam(defaultValue = "0") int page
+    public ResponseEntity<PostPageResponse> getPostsByPage(
+        @RequestParam(defaultValue = "1") int page
         , @RequestParam(defaultValue = "10") int size) {
 
+        if (page < 1 || size != 10) {
+            throw new InvalidPaginationException();
+        }
+
         Pageable pageable = PageRequest.of(page - 1, size);
-        PostListResponse postListResponse = postService.findByPage(pageable);
-        return ResponseEntity.ok().body(postListResponse);
+        PostPageResponse postPageResponse = postService.findByPage(pageable);
+        return ResponseEntity.ok().body(postPageResponse);
     }
 
     @GetMapping("/{postId}")
