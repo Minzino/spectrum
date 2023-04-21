@@ -58,3 +58,24 @@ include::{snippets}/post-by-page/http-request.adoc[]
 
 ==== Response
 include::{snippets}/post-by-page/http-response.adoc[]
+
+=== 게시글 검색
+
+API : `GET /api/posts/search?type={type}&value={value}&page={page}&size={size}`
+
+==== Request Parameters
+
+[cols="25%,75%", options="header"]
+|===
+|Parameter|Description
+|`type`|검색 타입 (e.g., TITLE, CONTENT)
+|`value`|검색어
+|`page`|페이지 번호 (1부터 시작)
+|`size`|페이지 크기
+|===
+
+==== Request
+include::{snippets}/search_post/http-request.adoc[]
+
+==== Response
+include::{snippets}/search_post/http-response.adoc[]
