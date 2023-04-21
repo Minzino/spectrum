@@ -5,8 +5,10 @@ import com.spectrum.controller.post.dto.PostCreateRequest;
 import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
 import com.spectrum.controller.post.dto.PostPageResponse;
+import com.spectrum.controller.post.dto.PostSearchPageResponse;
 import com.spectrum.controller.post.dto.PostUpdateRequest;
 import com.spectrum.exception.post.InvalidPaginationException;
+import com.spectrum.exception.post.InvalidSearchTypeException;
 import com.spectrum.service.post.PostService;
 import java.net.URI;
 import javax.validation.Valid;
@@ -82,6 +84,29 @@ public class PostController {
         @PathVariable("postId") Long postId) {
 
         PostDetailResponse postdetailResponse = postService.findPostById(postId);
-        return ResponseEntity.ok().body(postdetailResponse);
+        return ResponseEntity.ok(postdetailResponse);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<PostSearchPageResponse> searchPosts(
+        @RequestParam("type") String searchType
+        , @RequestParam("value") String searchValue
+        , @RequestParam(defaultValue = "1") int page
+        , @RequestParam(defaultValue = "10") int size) {
+
+        try {
+            SearchType.valueOf(searchType.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidSearchTypeException();
+        }
+
+        if (page < 1 || size != 10) {
+            throw new InvalidPaginationException();
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        PostSearchPageResponse response = postService.searchPosts(searchType, searchValue,
+            pageable);
+        return ResponseEntity.ok(response);
     }
 }

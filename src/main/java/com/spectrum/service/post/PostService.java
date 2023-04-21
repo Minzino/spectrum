@@ -4,10 +4,12 @@ import com.spectrum.common.aop.UserValidation;
 import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
 import com.spectrum.controller.post.dto.PostPageResponse;
+import com.spectrum.controller.post.dto.PostSearchPageResponse;
 import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
 import com.spectrum.exception.post.PostNotFoundException;
 import com.spectrum.repository.post.PostRepository;
+import com.spectrum.repository.post.PostSpecification;
 import com.spectrum.service.post.dto.PostCreateDto;
 import com.spectrum.service.post.dto.PostDto;
 import com.spectrum.service.post.dto.PostUpdateDto;
@@ -76,5 +78,27 @@ public class PostService {
             .orElseThrow(PostNotFoundException::new);
 
         return PostDetailResponse.ofEntity(post);
+    }
+
+    public PostSearchPageResponse searchPosts(String searchType, String searchValue, Pageable pageable) {
+
+        Page<Post> searchedPosts = postRepository.findAll(
+            PostSpecification.searchByType(searchType, searchValue),
+            pageable
+        );
+        return convertToPostSearchPageResponse(searchedPosts);
+    }
+
+    private PostSearchPageResponse convertToPostSearchPageResponse(Page<Post> searchedPosts) {
+
+        List<PostDto> postDtos = searchedPosts.getContent().stream()
+            .map(post -> new PostDto(post.getId(), post.getTitle(), post.getContent()))
+            .collect(Collectors.toList());
+        return new PostSearchPageResponse(
+            postDtos,
+            searchedPosts.getTotalPages(),
+            searchedPosts.getTotalElements(),
+            searchedPosts.getNumber() + 1
+        );
     }
 }
