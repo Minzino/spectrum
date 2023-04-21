@@ -144,8 +144,8 @@ class PostServiceTest extends IntegerationTest {
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(post.getTitle()).isEqualTo("title");
-            softly.assertThat(post.getContent()).isEqualTo("content");
+            softly.assertThat(post.getTitle()).isEqualTo("title1");
+            softly.assertThat(post.getContent()).isEqualTo("content1");
         });
     }
 
