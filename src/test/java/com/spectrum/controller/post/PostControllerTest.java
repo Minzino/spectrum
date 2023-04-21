@@ -168,7 +168,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .queryParam("size", pageSize)
 
             .when()
-            .get("/api/posts?page={page}&size={size}", pageNumber, pageSize)
+            .get("/api/posts")
 
             .then()
             .statusCode(HttpStatus.OK.value())
@@ -182,6 +182,14 @@ public class PostControllerTest extends InitIntegrationDocsTest {
         int invalidPageSize = 20;
 
         given(this.spec)
+            .filter(
+                document("invalid-post-by-page",
+                    requestParameters(
+                        parameterWithName("page").description("페이지 번호 (1부터 시작)"),
+                        parameterWithName("size").description("페이지 크기")
+                    )
+                )
+            )
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
             .queryParam("page", invalidPageNumber)
@@ -189,6 +197,74 @@ public class PostControllerTest extends InitIntegrationDocsTest {
 
             .when()
             .get("/api/posts")
+
+            .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    @Test
+    @DisplayName("정상적인 게시글 검색 요청이 검색 성공")
+    void find_by_search_page_post_success() {
+        int pageNumber = 1;
+        int pageSize = 10;
+        String searchType = "title";
+        String searchValue = "title";
+
+        given(this.spec)
+            .filter(
+                document("search_post",
+                    requestParameters(
+                        parameterWithName("type").description("검색타입"),
+                        parameterWithName("value").description("검색어"),
+                        parameterWithName("page").description("페이지 번호 (1부터 시작)"),
+                        parameterWithName("size").description("페이지 크기")
+                    )
+                )
+            )
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+            .queryParam("type", searchType)
+            .queryParam("value", searchValue)
+            .queryParam("page", pageNumber)
+            .queryParam("size", pageSize)
+
+            .when()
+            .get("/api/posts/search")
+
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    @Test
+    @DisplayName("게시글 검색 요청이 잘못된 경우 예외 발생")
+    void find_by_search_page_post_failure() {
+        int pageNumber = 1;
+        int pageSize = 10;
+        String invalidSearchType = "invalidType";
+        String invalidSearchValue = "invalidValue";
+
+        given(this.spec)
+            .filter(
+                document("post-search-invalid",
+                    requestParameters(
+                        parameterWithName("type").description("검색타입"),
+                        parameterWithName("value").description("검색어"),
+                        parameterWithName("page").description("페이지 번호 (1부터 시작)"),
+                        parameterWithName("size").description("페이지 크기")
+                    )
+                )
+            )
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+            .queryParam("type", invalidSearchType)
+            .queryParam("value", invalidSearchValue)
+            .queryParam("page", pageNumber)
+            .queryParam("size", pageSize)
+
+            .when()
+            .get("/api/posts/search")
 
             .then()
             .statusCode(HttpStatus.BAD_REQUEST.value())
