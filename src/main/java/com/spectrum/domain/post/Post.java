@@ -18,10 +18,7 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
-@Table(name = "posts", indexes = {
-    @Index(name = "idx_title", columnList = "title"),
-    @Index(name = "idx_content", columnList = "content")
-})
+@Table(name = "posts")
 @SQLDelete(sql = "update posts set deleted_at = now() where post_id = ?")
 @Where(clause = "deleted_at is null")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

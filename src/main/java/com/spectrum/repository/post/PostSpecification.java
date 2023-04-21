@@ -19,13 +19,13 @@ public class PostSpecification {
             switch (searchType.toLowerCase()) {
                 case "title":
                     predicate = criteriaBuilder.like(
-                        criteriaBuilder.lower(root.get("title")),
+                        root.get("title"),
                         "%" + searchValue.toLowerCase() + "%"
                     );
                     break;
                 case "content":
                     predicate = criteriaBuilder.like(
-                        criteriaBuilder.lower(root.get("content")),
+                        root.get("content"),
                         "%" + searchValue.toLowerCase() + "%"
                     );
                     break;
