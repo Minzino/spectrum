@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
 import com.spectrum.controller.post.dto.PostPageResponse;
+import com.spectrum.controller.post.dto.PostSearchPageResponse;
 import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
 import com.spectrum.domain.user.Authority;
@@ -50,9 +51,9 @@ class PostServiceTest extends IntegerationTest {
         user2 = userRepository.save(
             new User(2L, "45678", "username2", "email2", "imageUrl2", Authority.GUEST)
         );
-        savePost1 = postRepository.save(new Post("title", "content", USER1_ID));
-        savePost2 = postRepository.save(new Post("title", "content", USER2_ID));
-        savePost3 = postRepository.save(new Post("title", "content", USER1_ID));
+        savePost1 = postRepository.save(new Post("title1", "content1", USER1_ID));
+        savePost2 = postRepository.save(new Post("title2", "content2", USER2_ID));
+        savePost3 = postRepository.save(new Post("title3", "content3", USER1_ID));
     }
 
     @DisplayName("정상적인 게시글 생성 요청이 들어온다면 게시글 생성 성공")
@@ -159,7 +160,7 @@ class PostServiceTest extends IntegerationTest {
 
     @DisplayName("정상적인 게시글 페이지 조회시 페이지 조회 성공")
     @Test
-    void get_all_post_success() {
+    void get_page_post_success() {
         // given
         Pageable pageable = PageRequest.of(0, 10);
         // when
@@ -232,5 +233,23 @@ class PostServiceTest extends IntegerationTest {
         assertThatThrownBy(
             () -> postService.update(USER2_ID, POST_ID, postUpdateDto))
             .isInstanceOf(NotAuthorException.class);
+    }
+
+    @DisplayName("정상적인 제목,내용 검색 요청시 검색 성공")
+    @Test
+    void get_search_page_post_success() {
+        // given
+        String searchType = "title";
+        String searchValue = "title";
+        Pageable pageable = PageRequest.of(0, 10);
+        // when
+        PostSearchPageResponse page = postService.searchPosts(searchType, searchValue, pageable);
+        // then
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(page.getPosts().size()).isEqualTo(3);
+            softly.assertThat(page.getCurrentPage()).isEqualTo(1);
+            softly.assertThat(page.getTotalPages()).isEqualTo(1);
+            softly.assertThat(page.getTotalElements()).isEqualTo(3);
+        });
     }
 }
