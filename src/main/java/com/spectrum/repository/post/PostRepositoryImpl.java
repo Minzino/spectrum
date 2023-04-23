@@ -43,7 +43,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             .selectFrom(post)
             .where(post.id.loe(lastPostId).and(searchPredicate))
             .orderBy(post.id.desc())
-            .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
 
