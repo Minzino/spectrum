@@ -70,7 +70,7 @@ public class PostController {
         @RequestParam(value = "last-post-id", required = false) Long lastPostId,
         @RequestParam(defaultValue = "10") int size) {
 
-        if ((lastPostId < 10) || (size != 10)) {
+        if (size != 10) {
             throw new InvalidPaginationException();
         }
 
@@ -100,7 +100,7 @@ public class PostController {
             throw new InvalidSearchTypeException();
         }
 
-        if ((lastPostId < 10) || (size != 10)) {
+        if (size != 10) {
             throw new InvalidPaginationException();
         }
 
