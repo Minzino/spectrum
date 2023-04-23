@@ -11,14 +11,10 @@ import lombok.NoArgsConstructor;
 public class PostPageResponse {
 
     private List<PostDto> posts;
-    private int totalPages;
-    private long totalElements;
-    private int currentPage;
+    private int numberOfElements;
 
-    public PostPageResponse(List<PostDto> posts, int totalPages, long totalElements, int currentPage) {
+    public PostPageResponse(List<PostDto> posts, int numberOfElements) {
         this.posts = posts;
-        this.totalPages = totalPages;
-        this.totalElements = totalElements;
-        this.currentPage = currentPage;
+        this.numberOfElements = numberOfElements;
     }
 }
