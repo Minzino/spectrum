@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
 import com.spectrum.controller.post.dto.PostPageResponse;
-import com.spectrum.controller.post.dto.PostSearchPageResponse;
 import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
 import com.spectrum.domain.user.Authority;
@@ -25,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @DisplayName("게시글 서비스 테스트")
 class PostServiceTest extends IntegerationTest {
@@ -162,15 +162,15 @@ class PostServiceTest extends IntegerationTest {
     @Test
     void get_page_post_success() {
         // given
-        Pageable pageable = PageRequest.of(0, 10);
+        int size = 10;
+        Long lastId = 3L;
+        Pageable pageable = PageRequest.of(0, size, Sort.by("id").descending());
         // when
-        PostPageResponse page = postService.findByPage(pageable);
+        PostPageResponse page = postService.findByPage(lastId, pageable);
         // then
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(page.getPosts().size()).isEqualTo(3);
-            softly.assertThat(page.getCurrentPage()).isEqualTo(1);
-            softly.assertThat(page.getTotalPages()).isEqualTo(1);
-            softly.assertThat(page.getTotalElements()).isEqualTo(3);
+            softly.assertThat(page.getNumberOfElements()).isEqualTo(3);
         });
     }
 
@@ -239,17 +239,19 @@ class PostServiceTest extends IntegerationTest {
     @Test
     void get_search_page_post_success() {
         // given
+        int size = 10;
+        Long lastPostId = 3L;
         String searchType = "title";
         String searchValue = "title";
-        Pageable pageable = PageRequest.of(0, 10);
+        Pageable pageable = PageRequest.of(0, size, Sort.by("id").descending());
         // when
-        PostSearchPageResponse page = postService.searchPosts(searchType, searchValue, pageable);
+        PostPageResponse page = postService.searchPosts(
+            searchType, searchValue, lastPostId, pageable
+        );
         // then
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(page.getPosts().size()).isEqualTo(3);
-            softly.assertThat(page.getCurrentPage()).isEqualTo(1);
-            softly.assertThat(page.getTotalPages()).isEqualTo(1);
-            softly.assertThat(page.getTotalElements()).isEqualTo(3);
+            softly.assertThat(page.getNumberOfElements()).isEqualTo(3);
         });
     }
 }

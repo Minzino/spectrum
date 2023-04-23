@@ -44,6 +44,8 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     Post savePost3;
     User user;
     String validToken;
+    private static final Long LAST_POST_ID = 3L;
+    private static final int PAGE_SIZE = 10;
 
     @BeforeEach
     void init() {
@@ -151,21 +153,19 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @Test
     @DisplayName("게시글 페이지 조회 요청이 정상적인 경우 게시글 페이지 조회 성공")
     void find_by_page_post_success() {
-        int pageNumber = 1;
-        int pageSize = 10;
         given(this.spec)
             .filter(
                 document("post-by-page",
                     requestParameters(
-                        parameterWithName("page").description("페이지 번호 (1부터 시작)"),
+                        parameterWithName("last-post-id").description("마지막 게시글의 번호"),
                         parameterWithName("size").description("페이지 크기")
                     )
                 )
             )
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
-            .queryParam("page", pageNumber)
-            .queryParam("size", pageSize)
+            .queryParam("last-post-id", LAST_POST_ID)
+            .queryParam("size", PAGE_SIZE)
 
             .when()
             .get("/api/posts")
@@ -178,21 +178,21 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @Test
     @DisplayName("게시글 페이지 조회 요청이 잘못된 경우 예외 발생")
     void find_by_page_post_failure() {
-        int invalidPageNumber = -1;
+        int invalidLastPostId = -1;
         int invalidPageSize = 20;
 
         given(this.spec)
             .filter(
                 document("invalid-post-by-page",
                     requestParameters(
-                        parameterWithName("page").description("페이지 번호 (1부터 시작)"),
+                        parameterWithName("last-post-id").description("마지막 게시글의 번호"),
                         parameterWithName("size").description("페이지 크기")
                     )
                 )
             )
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
-            .queryParam("page", invalidPageNumber)
+            .queryParam("last-post-id", invalidLastPostId)
             .queryParam("size", invalidPageSize)
 
             .when()
@@ -206,8 +206,6 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @Test
     @DisplayName("정상적인 게시글 검색 요청이 검색 성공")
     void find_by_search_page_post_success() {
-        int pageNumber = 1;
-        int pageSize = 10;
         String searchType = "title";
         String searchValue = "title";
 
@@ -217,7 +215,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
                     requestParameters(
                         parameterWithName("type").description("검색타입"),
                         parameterWithName("value").description("검색어"),
-                        parameterWithName("page").description("페이지 번호 (1부터 시작)"),
+                        parameterWithName("last-post-id").description("마지막 게시글의 번호"),
                         parameterWithName("size").description("페이지 크기")
                     )
                 )
@@ -226,8 +224,8 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
             .queryParam("type", searchType)
             .queryParam("value", searchValue)
-            .queryParam("page", pageNumber)
-            .queryParam("size", pageSize)
+            .queryParam("last-post-id", LAST_POST_ID)
+            .queryParam("size", PAGE_SIZE)
 
             .when()
             .get("/api/posts/search")
@@ -240,8 +238,6 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     @Test
     @DisplayName("게시글 검색 요청이 잘못된 경우 예외 발생")
     void find_by_search_page_post_failure() {
-        int pageNumber = 1;
-        int pageSize = 10;
         String invalidSearchType = "invalidType";
         String invalidSearchValue = "invalidValue";
 
@@ -251,7 +247,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
                     requestParameters(
                         parameterWithName("type").description("검색타입"),
                         parameterWithName("value").description("검색어"),
-                        parameterWithName("page").description("페이지 번호 (1부터 시작)"),
+                        parameterWithName("last-post-id").description("마지막 게시글의 번호"),
                         parameterWithName("size").description("페이지 크기")
                     )
                 )
@@ -260,8 +256,8 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
             .queryParam("type", invalidSearchType)
             .queryParam("value", invalidSearchValue)
-            .queryParam("page", pageNumber)
-            .queryParam("size", pageSize)
+            .queryParam("last-post-id", LAST_POST_ID)
+            .queryParam("size", PAGE_SIZE)
 
             .when()
             .get("/api/posts/search")
