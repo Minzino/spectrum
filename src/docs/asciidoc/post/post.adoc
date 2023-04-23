@@ -59,7 +59,7 @@ include::{snippets}/post-by-page/http-request.adoc[]
 ==== Response
 include::{snippets}/post-by-page/http-response.adoc[]
 
-=== 게시글 검색(스크롤 조)
+=== 게시글 검색(스크롤 조회)
 
 API : `GET /api/posts/search?type={type}&value={value}&last-post-id={lastPostId}&size={size}`
 
