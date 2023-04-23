@@ -5,7 +5,6 @@ import com.spectrum.controller.post.dto.PostCreateRequest;
 import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
 import com.spectrum.controller.post.dto.PostPageResponse;
-import com.spectrum.controller.post.dto.PostSearchPageResponse;
 import com.spectrum.controller.post.dto.PostUpdateRequest;
 import com.spectrum.exception.post.InvalidPaginationException;
 import com.spectrum.exception.post.InvalidSearchTypeException;
@@ -14,6 +13,7 @@ import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,15 +67,15 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<PostPageResponse> getPostsByPage(
-        @RequestParam(defaultValue = "1") int page
-        , @RequestParam(defaultValue = "10") int size) {
+        @RequestParam(value = "last-post-id", required = false) Long lastPostId,
+        @RequestParam(defaultValue = "10") int size) {
 
-        if (page < 1 || size != 10) {
+        if ((lastPostId < 10) || (size != 10)) {
             throw new InvalidPaginationException();
         }
 
-        Pageable pageable = PageRequest.of(page - 1, size);
-        PostPageResponse postPageResponse = postService.findByPage(pageable);
+        Pageable pageable = PageRequest.of(0, size, Sort.by("id").descending());
+        PostPageResponse postPageResponse = postService.findByPage(lastPostId, pageable);
         return ResponseEntity.ok().body(postPageResponse);
     }
 
@@ -88,10 +88,10 @@ public class PostController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<PostSearchPageResponse> searchPosts(
+    public ResponseEntity<PostPageResponse> searchPosts(
         @RequestParam("type") String searchType
         , @RequestParam("value") String searchValue
-        , @RequestParam(defaultValue = "1") int page
+        , @RequestParam(value = "last-post-id", required = false) Long lastPostId
         , @RequestParam(defaultValue = "10") int size) {
 
         try {
@@ -100,13 +100,17 @@ public class PostController {
             throw new InvalidSearchTypeException();
         }
 
-        if (page < 1 || size != 10) {
+        if ((lastPostId < 10) || (size != 10)) {
             throw new InvalidPaginationException();
         }
 
-        Pageable pageable = PageRequest.of(page - 1, size);
-        PostSearchPageResponse response = postService.searchPosts(searchType, searchValue,
-            pageable);
+        Pageable pageable = PageRequest.of(0, size, Sort.by("id").descending());
+        PostPageResponse response = postService.searchPosts(
+            searchType
+            , searchValue
+            , lastPostId
+            , pageable
+        );
         return ResponseEntity.ok(response);
     }
 }
