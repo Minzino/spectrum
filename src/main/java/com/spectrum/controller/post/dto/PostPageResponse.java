@@ -12,9 +12,11 @@ public class PostPageResponse {
 
     private List<PostDto> posts;
     private int numberOfElements;
+    private Long lastIdInPage;
 
-    public PostPageResponse(List<PostDto> posts, int numberOfElements) {
+    public PostPageResponse(List<PostDto> posts, int numberOfElements, Long lastIdInPage) {
         this.posts = posts;
         this.numberOfElements = numberOfElements;
+        this.lastIdInPage = lastIdInPage;
     }
 }

@@ -56,17 +56,23 @@ public class PostService {
         postRepository.delete(post);
     }
 
+    public PostPageResponse findByPage(Long cursor, Pageable pageable) {
+        Slice<Post> postSlice = postRepository.findPostsAfterId(cursor, pageable);
 
-    public PostPageResponse findByPage(Long lastPostId, Pageable pageable) {
-        Slice<Post> postSlice = postRepository.findPostsAfterId(lastPostId, pageable);
-
-        List<PostDto> postDtos = postSlice.stream()
+        List<PostDto> postDtos = postSlice.getContent().stream()
             .map(post -> new PostDto(post.getId(), post.getTitle(), post.getContent()))
-            .collect(Collectors.toUnmodifiableList());
+            .collect(Collectors.toList());
+
+        Long lastIdInPage = null;
+        if (!postDtos.isEmpty()) {
+            PostDto lastPostDto = postDtos.get(postDtos.size() - 1);
+            lastIdInPage = lastPostDto.getPostId();
+        }
 
         return new PostPageResponse(
-            postDtos
-            , postSlice.getNumberOfElements()
+            postDtos,
+            postSlice.getNumberOfElements(),
+            lastIdInPage
         );
     }
 
@@ -78,18 +84,24 @@ public class PostService {
         return PostDetailResponse.ofEntity(post);
     }
 
-    public PostPageResponse searchPosts(String searchType, String searchValue, Long lastPostId,
-        Pageable pageable) {
-        Slice<Post> postSlice = postRepository.searchPosts(searchType, searchValue, lastPostId,
+    public PostPageResponse searchPosts(String searchType, String searchValue, Pageable pageable) {
+        Slice<Post> postSlice = postRepository.searchPosts(searchType, searchValue, null,
             pageable);
 
         List<PostDto> postDtos = postSlice.getContent().stream()
             .map(post -> new PostDto(post.getId(), post.getTitle(), post.getContent()))
             .collect(Collectors.toList());
 
+        Long lastIdInPage = null;
+        if (!postDtos.isEmpty()) {
+            PostDto lastPostDto = postDtos.get(postDtos.size() - 1);
+            lastIdInPage = lastPostDto.getPostId();
+        }
+
         return new PostPageResponse(
-            postDtos
-            , postSlice.getNumberOfElements()
+            postDtos,
+            postSlice.getNumberOfElements(),
+            lastIdInPage
         );
     }
 }

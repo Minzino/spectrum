@@ -1,6 +1,7 @@
 package com.spectrum.repository.post;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.spectrum.domain.post.Post;
 import com.spectrum.domain.post.QPost;
@@ -23,10 +24,12 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     @Override
-    public Slice<Post> findPostsAfterId(Long lastPostId, Pageable pageable) {
-        List<Post> posts = queryFactory
-            .selectFrom(post)
-            .where(post.id.loe(lastPostId))
+    public Slice<Post> findPostsAfterId(Long cursor, Pageable pageable) {
+        JPAQuery<Post> query = queryFactory.selectFrom(post);
+        if (cursor != null) {
+            query = query.where(post.id.lt(cursor));
+        }
+        List<Post> posts = query
             .orderBy(post.id.desc())
             .limit(pageable.getPageSize())
             .fetch();

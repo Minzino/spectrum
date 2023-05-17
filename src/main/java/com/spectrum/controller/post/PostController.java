@@ -6,14 +6,11 @@ import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
 import com.spectrum.controller.post.dto.PostPageResponse;
 import com.spectrum.controller.post.dto.PostUpdateRequest;
-import com.spectrum.exception.post.InvalidPaginationException;
 import com.spectrum.exception.post.InvalidSearchTypeException;
 import com.spectrum.service.post.PostService;
 import java.net.URI;
 import javax.validation.Valid;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,32 +64,24 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<PostPageResponse> getPostsByPage(
-        @RequestParam(value = "last-post-id", required = false) Long lastPostId,
-        @RequestParam(defaultValue = "10") int size) {
+        @RequestParam(value = "cursor", required = false) Long cursor,
+        Pageable pageable) {
 
-        if (size != 10) {
-            throw new InvalidPaginationException();
-        }
-
-        Pageable pageable = PageRequest.of(0, size, Sort.by("id").descending());
-        PostPageResponse postPageResponse = postService.findByPage(lastPostId, pageable);
-        return ResponseEntity.ok().body(postPageResponse);
+        PostPageResponse response = postService.findByPage(cursor, pageable);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostDetailResponse> getPost(
-        @PathVariable("postId") Long postId) {
-
+    public ResponseEntity<PostDetailResponse> getPost(@PathVariable("postId") Long postId) {
         PostDetailResponse postdetailResponse = postService.findPostById(postId);
         return ResponseEntity.ok(postdetailResponse);
     }
 
     @GetMapping("/search")
     public ResponseEntity<PostPageResponse> searchPosts(
-        @RequestParam("type") String searchType
-        , @RequestParam("value") String searchValue
-        , @RequestParam(value = "last-post-id", required = false) Long lastPostId
-        , @RequestParam(defaultValue = "10") int size) {
+        @RequestParam("type") String searchType,
+        @RequestParam("value") String searchValue,
+        Pageable pageable) {
 
         try {
             SearchType.valueOf(searchType.toUpperCase());
@@ -100,17 +89,7 @@ public class PostController {
             throw new InvalidSearchTypeException();
         }
 
-        if (size != 10) {
-            throw new InvalidPaginationException();
-        }
-
-        Pageable pageable = PageRequest.of(0, size, Sort.by("id").descending());
-        PostPageResponse response = postService.searchPosts(
-            searchType
-            , searchValue
-            , lastPostId
-            , pageable
-        );
+        PostPageResponse  response= postService.searchPosts(searchType, searchValue, pageable);
         return ResponseEntity.ok(response);
     }
 }
