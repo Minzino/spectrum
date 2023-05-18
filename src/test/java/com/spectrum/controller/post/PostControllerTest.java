@@ -44,7 +44,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     Post savePost3;
     User user;
     String validToken;
-    private static final Long LAST_POST_ID = 3L;
+    private static final Long LAST_POST_ID = 10L;
     private static final int PAGE_SIZE = 10;
 
     @BeforeEach
@@ -157,14 +157,14 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .filter(
                 document("post-by-page",
                     requestParameters(
-                        parameterWithName("last-post-id").description("마지막 게시글의 번호"),
+                        parameterWithName("cursor").description("마지막 게시글의 번호"),
                         parameterWithName("size").description("페이지 크기")
                     )
                 )
             )
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
-            .queryParam("last-post-id", LAST_POST_ID)
+            .queryParam("cursor", LAST_POST_ID)
             .queryParam("size", PAGE_SIZE)
 
             .when()
@@ -185,14 +185,14 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .filter(
                 document("invalid-post-by-page",
                     requestParameters(
-                        parameterWithName("last-post-id").description("마지막 게시글의 번호"),
+                        parameterWithName("cursor").description("마지막 게시글의 번호"),
                         parameterWithName("size").description("페이지 크기")
                     )
                 )
             )
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
-            .queryParam("last-post-id", invalidLastPostId)
+            .queryParam("cursor", invalidLastPostId)
             .queryParam("size", invalidPageSize)
 
             .when()
@@ -215,7 +215,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
                     requestParameters(
                         parameterWithName("type").description("검색타입"),
                         parameterWithName("value").description("검색어"),
-                        parameterWithName("last-post-id").description("마지막 게시글의 번호"),
+                        parameterWithName("cursor").description("마지막 게시글의 번호"),
                         parameterWithName("size").description("페이지 크기")
                     )
                 )
@@ -224,7 +224,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
             .queryParam("type", searchType)
             .queryParam("value", searchValue)
-            .queryParam("last-post-id", LAST_POST_ID)
+            .queryParam("cursor", LAST_POST_ID)
             .queryParam("size", PAGE_SIZE)
 
             .when()
@@ -247,7 +247,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
                     requestParameters(
                         parameterWithName("type").description("검색타입"),
                         parameterWithName("value").description("검색어"),
-                        parameterWithName("last-post-id").description("마지막 게시글의 번호"),
+                        parameterWithName("cursor").description("마지막 게시글의 번호"),
                         parameterWithName("size").description("페이지 크기")
                     )
                 )
@@ -256,7 +256,7 @@ public class PostControllerTest extends InitIntegrationDocsTest {
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
             .queryParam("type", invalidSearchType)
             .queryParam("value", invalidSearchValue)
-            .queryParam("last-post-id", LAST_POST_ID)
+            .queryParam("cursor", LAST_POST_ID)
             .queryParam("size", PAGE_SIZE)
 
             .when()

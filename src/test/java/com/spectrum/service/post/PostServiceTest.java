@@ -163,10 +163,10 @@ class PostServiceTest extends IntegerationTest {
     void get_page_post_success() {
         // given
         int size = 10;
-        Long lastId = 3L;
+        Long cursor = 4L;
         Pageable pageable = PageRequest.of(0, size, Sort.by("id").descending());
         // when
-        PostPageResponse page = postService.findByPage(lastId, pageable);
+        PostPageResponse page = postService.findByPage(cursor, pageable);
         // then
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(page.getPosts().size()).isEqualTo(3);
@@ -240,13 +240,13 @@ class PostServiceTest extends IntegerationTest {
     void get_search_page_post_success() {
         // given
         int size = 10;
-        Long lastPostId = 3L;
+        Long cursor = 4L;
         String searchType = "title";
         String searchValue = "title";
         Pageable pageable = PageRequest.of(0, size, Sort.by("id").descending());
         // when
         PostPageResponse page = postService.searchPosts(
-            searchType, searchValue, lastPostId, pageable
+            cursor, searchType, searchValue, pageable
         );
         // then
         SoftAssertions.assertSoftly(softly -> {
