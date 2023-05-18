@@ -84,8 +84,8 @@ public class PostService {
         return PostDetailResponse.ofEntity(post);
     }
 
-    public PostPageResponse searchPosts(String searchType, String searchValue, Pageable pageable) {
-        Slice<Post> postSlice = postRepository.searchPosts(searchType, searchValue, null,
+    public PostPageResponse searchPosts(Long cursor, String searchType, String searchValue, Pageable pageable) {
+        Slice<Post> postSlice = postRepository.searchPosts(cursor, searchType, searchValue,
             pageable);
 
         List<PostDto> postDtos = postSlice.getContent().stream()

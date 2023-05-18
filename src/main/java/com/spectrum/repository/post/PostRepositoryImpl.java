@@ -38,13 +38,17 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     @Override
-    public Slice<Post> searchPosts(String searchType, String searchValue, Long lastPostId,
+    public Slice<Post> searchPosts(Long cursor, String searchType, String searchValue,
         Pageable pageable) {
         BooleanExpression searchPredicate = searchPredicate(searchType, searchValue);
+        JPAQuery<Post> query = queryFactory.selectFrom(post);
 
-        List<Post> posts = queryFactory
-            .selectFrom(post)
-            .where(post.id.loe(lastPostId).and(searchPredicate))
+        if (cursor != null) {
+            query = query.where(post.id.lt(cursor).and(searchPredicate));
+        } else {
+            query = query.where(searchPredicate);
+        }
+        List<Post> posts = query
             .orderBy(post.id.desc())
             .limit(pageable.getPageSize())
             .fetch();

@@ -6,6 +6,7 @@ import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
 import com.spectrum.controller.post.dto.PostPageResponse;
 import com.spectrum.controller.post.dto.PostUpdateRequest;
+import com.spectrum.exception.post.InvalidPaginationException;
 import com.spectrum.exception.post.InvalidSearchTypeException;
 import com.spectrum.service.post.PostService;
 import java.net.URI;
@@ -67,6 +68,10 @@ public class PostController {
         @RequestParam(value = "cursor", required = false) Long cursor,
         Pageable pageable) {
 
+        if (cursor != null && cursor < 1) {
+            throw new InvalidPaginationException();
+        }
+
         PostPageResponse response = postService.findByPage(cursor, pageable);
         return ResponseEntity.ok().body(response);
     }
@@ -79,9 +84,14 @@ public class PostController {
 
     @GetMapping("/search")
     public ResponseEntity<PostPageResponse> searchPosts(
+        @RequestParam(value = "cursor", required = false) Long cursor,
         @RequestParam("type") String searchType,
         @RequestParam("value") String searchValue,
         Pageable pageable) {
+
+        if (cursor != null && cursor < 1) {
+            throw new InvalidPaginationException();
+        }
 
         try {
             SearchType.valueOf(searchType.toUpperCase());
@@ -89,7 +99,8 @@ public class PostController {
             throw new InvalidSearchTypeException();
         }
 
-        PostPageResponse  response= postService.searchPosts(searchType, searchValue, pageable);
+        PostPageResponse response = postService.searchPosts(cursor, searchType, searchValue,
+            pageable);
         return ResponseEntity.ok(response);
     }
 }
