@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.spectrum.controller.post.dto.PostCreateResponse;
 import com.spectrum.controller.post.dto.PostDetailResponse;
-import com.spectrum.controller.post.dto.PostListResponse;
+import com.spectrum.controller.post.dto.PostPageResponse;
 import com.spectrum.controller.post.dto.PostUpdateResponse;
 import com.spectrum.domain.post.Post;
 import com.spectrum.domain.user.Authority;
@@ -22,6 +22,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @DisplayName("게시글 서비스 테스트")
 class PostServiceTest extends IntegerationTest {
@@ -48,9 +51,9 @@ class PostServiceTest extends IntegerationTest {
         user2 = userRepository.save(
             new User(2L, "45678", "username2", "email2", "imageUrl2", Authority.GUEST)
         );
-        savePost1 = postRepository.save(new Post("title", "content", USER1_ID));
-        savePost2 = postRepository.save(new Post("title", "content", USER2_ID));
-        savePost3 = postRepository.save(new Post("title", "content", USER1_ID));
+        savePost1 = postRepository.save(new Post("title1", "content1", USER1_ID));
+        savePost2 = postRepository.save(new Post("title2", "content2", USER2_ID));
+        savePost3 = postRepository.save(new Post("title3", "content3", USER1_ID));
     }
 
     @DisplayName("정상적인 게시글 생성 요청이 들어온다면 게시글 생성 성공")
@@ -141,8 +144,8 @@ class PostServiceTest extends IntegerationTest {
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(post.getTitle()).isEqualTo("title");
-            softly.assertThat(post.getContent()).isEqualTo("content");
+            softly.assertThat(post.getTitle()).isEqualTo("title1");
+            softly.assertThat(post.getContent()).isEqualTo("content1");
         });
     }
 
@@ -155,13 +158,20 @@ class PostServiceTest extends IntegerationTest {
             .isInstanceOf(PostNotFoundException.class);
     }
 
-    @DisplayName("정상적인 게시글 전체 조회시 전체 조회 성공")
+    @DisplayName("정상적인 게시글 페이지 조회시 페이지 조회 성공")
     @Test
-    void get_all_post_success() {
-        // given & when
-        PostListResponse postList = postService.findAll();
+    void get_page_post_success() {
+        // given
+        int size = 10;
+        Long cursor = 4L;
+        Pageable pageable = PageRequest.of(0, size, Sort.by("id").descending());
+        // when
+        PostPageResponse page = postService.findByPage(cursor, pageable);
         // then
-        assertThat(postList.getPosts().size()).isEqualTo(3);
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(page.getPosts().size()).isEqualTo(3);
+            softly.assertThat(page.getNumberOfElements()).isEqualTo(3);
+        });
     }
 
     @DisplayName("존재하지 않는 회원이 게시글 생성 요청 시 예외 발생")
@@ -223,5 +233,25 @@ class PostServiceTest extends IntegerationTest {
         assertThatThrownBy(
             () -> postService.update(USER2_ID, POST_ID, postUpdateDto))
             .isInstanceOf(NotAuthorException.class);
+    }
+
+    @DisplayName("정상적인 제목,내용 검색 요청시 검색 성공")
+    @Test
+    void get_search_page_post_success() {
+        // given
+        int size = 10;
+        Long cursor = 4L;
+        String searchType = "title";
+        String searchValue = "title";
+        Pageable pageable = PageRequest.of(0, size, Sort.by("id").descending());
+        // when
+        PostPageResponse page = postService.searchPosts(
+            cursor, searchType, searchValue, pageable
+        );
+        // then
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(page.getPosts().size()).isEqualTo(3);
+            softly.assertThat(page.getNumberOfElements()).isEqualTo(3);
+        });
     }
 }

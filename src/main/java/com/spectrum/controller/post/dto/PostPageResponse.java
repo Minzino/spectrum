@@ -8,11 +8,15 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PostListResponse {
+public class PostPageResponse {
 
     private List<PostDto> posts;
+    private int numberOfElements;
+    private Long lastCursor;
 
-    public PostListResponse(List<PostDto> posts) {
+    public PostPageResponse(List<PostDto> posts, int numberOfElements, Long lastCursor) {
         this.posts = posts;
+        this.numberOfElements = numberOfElements;
+        this.lastCursor = lastCursor;
     }
 }

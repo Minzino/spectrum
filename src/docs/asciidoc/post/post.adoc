@@ -40,12 +40,42 @@ include::{snippets}/post-find/http-request.adoc[]
 ==== Response
 include::{snippets}/post-find/http-response.adoc[]
 
-=== 게시글 전체 조회
+=== 게시글 스크롤 조회
 
-API: `GET /api/posts`
+API : `GET /api/posts?cursor={cursor}&size={size}`
+
+==== Request Parameters
+
+[cols="25%,75%",options="header"]
+|===
+|Parameter|Description
+|`cursor`|cursor부터 size 크기만큼 게시글 조회
+|`size`|페이지 크기
+|===
 
 ==== Request
-include::{snippets}/post-findAll/http-request.adoc[]
+include::{snippets}/post-by-page/http-request.adoc[]
 
 ==== Response
-include::{snippets}/post-findAll/http-response.adoc[]
+include::{snippets}/post-by-page/http-response.adoc[]
+
+=== 게시글 검색(스크롤 조회)
+
+API : `GET /api/posts/search?type={type}&value={value}&cursor={cursor}&size={size}`
+
+==== Request Parameters
+
+[cols="25%,75%", options="header"]
+|===
+|Parameter|Description
+|`type`|검색 타입 (e.g., title, content)
+|`value`|검색어
+|`cursor`|cursor부터 size 크기만큼 게시글 조회
+|`size`|페이지 크기
+|===
+
+==== Request
+include::{snippets}/search_post/http-request.adoc[]
+
+==== Response
+include::{snippets}/search_post/http-response.adoc[]

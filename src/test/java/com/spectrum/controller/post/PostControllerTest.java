@@ -5,6 +5,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.spectrum.common.auth.provider.JwtProvider;
@@ -43,6 +44,8 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     Post savePost3;
     User user;
     String validToken;
+    private static final Long LAST_POST_ID = 10L;
+    private static final int PAGE_SIZE = 10;
 
     @BeforeEach
     void init() {
@@ -148,20 +151,119 @@ public class PostControllerTest extends InitIntegrationDocsTest {
     }
 
     @Test
-    @DisplayName("게시글 전체 조회 요청이 정상적인 경우 게시글 전체 조회 성공")
-    void findAll_post_success() {
+    @DisplayName("게시글 페이지 조회 요청이 정상적인 경우 게시글 페이지 조회 성공")
+    void find_by_page_post_success() {
         given(this.spec)
             .filter(
-                document("post-findAll")
+                document("post-by-page",
+                    requestParameters(
+                        parameterWithName("cursor").description("마지막 게시글의 번호"),
+                        parameterWithName("size").description("페이지 크기")
+                    )
+                )
             )
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+            .queryParam("cursor", LAST_POST_ID)
+            .queryParam("size", PAGE_SIZE)
 
             .when()
             .get("/api/posts")
 
             .then()
             .statusCode(HttpStatus.OK.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    @Test
+    @DisplayName("게시글 페이지 조회 요청이 잘못된 경우 예외 발생")
+    void find_by_page_post_failure() {
+        int invalidLastPostId = -1;
+        int invalidPageSize = 20;
+
+        given(this.spec)
+            .filter(
+                document("invalid-post-by-page",
+                    requestParameters(
+                        parameterWithName("cursor").description("마지막 게시글의 번호"),
+                        parameterWithName("size").description("페이지 크기")
+                    )
+                )
+            )
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+            .queryParam("cursor", invalidLastPostId)
+            .queryParam("size", invalidPageSize)
+
+            .when()
+            .get("/api/posts")
+
+            .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    @Test
+    @DisplayName("정상적인 게시글 검색 요청이 검색 성공")
+    void find_by_search_page_post_success() {
+        String searchType = "title";
+        String searchValue = "title";
+
+        given(this.spec)
+            .filter(
+                document("search_post",
+                    requestParameters(
+                        parameterWithName("type").description("검색타입"),
+                        parameterWithName("value").description("검색어"),
+                        parameterWithName("cursor").description("마지막 게시글의 번호"),
+                        parameterWithName("size").description("페이지 크기")
+                    )
+                )
+            )
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+            .queryParam("type", searchType)
+            .queryParam("value", searchValue)
+            .queryParam("cursor", LAST_POST_ID)
+            .queryParam("size", PAGE_SIZE)
+
+            .when()
+            .get("/api/posts/search")
+
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    @Test
+    @DisplayName("게시글 검색 요청이 잘못된 경우 예외 발생")
+    void find_by_search_page_post_failure() {
+        String invalidSearchType = "invalidType";
+        String invalidSearchValue = "invalidValue";
+
+        given(this.spec)
+            .filter(
+                document("post-search-invalid",
+                    requestParameters(
+                        parameterWithName("type").description("검색타입"),
+                        parameterWithName("value").description("검색어"),
+                        parameterWithName("cursor").description("마지막 게시글의 번호"),
+                        parameterWithName("size").description("페이지 크기")
+                    )
+                )
+            )
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .header("Content-type", MediaType.APPLICATION_JSON_VALUE)
+            .queryParam("type", invalidSearchType)
+            .queryParam("value", invalidSearchValue)
+            .queryParam("cursor", LAST_POST_ID)
+            .queryParam("size", PAGE_SIZE)
+
+            .when()
+            .get("/api/posts/search")
+
+            .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE);
     }
 }
