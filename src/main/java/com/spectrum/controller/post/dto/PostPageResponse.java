@@ -12,11 +12,11 @@ public class PostPageResponse {
 
     private List<PostDto> posts;
     private int numberOfElements;
-    private Long lastIdInPage;
+    private Long lastCursor;
 
-    public PostPageResponse(List<PostDto> posts, int numberOfElements, Long lastIdInPage) {
+    public PostPageResponse(List<PostDto> posts, int numberOfElements, Long lastCursor) {
         this.posts = posts;
         this.numberOfElements = numberOfElements;
-        this.lastIdInPage = lastIdInPage;
+        this.lastCursor = lastCursor;
     }
 }

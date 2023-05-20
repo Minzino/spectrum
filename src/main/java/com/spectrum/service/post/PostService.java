@@ -63,16 +63,16 @@ public class PostService {
             .map(post -> new PostDto(post.getId(), post.getTitle(), post.getContent()))
             .collect(Collectors.toList());
 
-        Long lastIdInPage = null;
+        Long lastCursor = null;
         if (!postDtos.isEmpty()) {
             PostDto lastPostDto = postDtos.get(postDtos.size() - 1);
-            lastIdInPage = lastPostDto.getPostId();
+            lastCursor = lastPostDto.getPostId();
         }
 
         return new PostPageResponse(
             postDtos,
             postSlice.getNumberOfElements(),
-            lastIdInPage
+            lastCursor
         );
     }
 
@@ -92,16 +92,16 @@ public class PostService {
             .map(post -> new PostDto(post.getId(), post.getTitle(), post.getContent()))
             .collect(Collectors.toList());
 
-        Long lastIdInPage = null;
+        Long lastCursor = null;
         if (!postDtos.isEmpty()) {
             PostDto lastPostDto = postDtos.get(postDtos.size() - 1);
-            lastIdInPage = lastPostDto.getPostId();
+            lastCursor = lastPostDto.getPostId();
         }
 
         return new PostPageResponse(
             postDtos,
             postSlice.getNumberOfElements(),
-            lastIdInPage
+            lastCursor
         );
     }
 }
